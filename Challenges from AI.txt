@@ -1,0 +1,64 @@
+1. User experience and clarity
+How will first-time users understand the value of taking pictures of food compared to manually entering it? Will there be a short guided demo or tooltip overlay?
+A short demo video will be recorded when the app goes live
+
+Will you allow partial photo recognition (e.g. “half eaten meals”)? How do you plan to handle portion estimation visually?
+Parked for future enhancement
+
+How do you ensure frictionless correction when the AI misrecognizes food — can users “teach” the model over time?
+All the data will be stored in a backend db for future RLHF development
+
+Have you considered gamification (badges, streaks, or progress achievements) to enhance user retention beyond 4–6 weeks?
+Parked for future enhancement
+
+
+2. Data and personalization
+Will calorie and macro recommendations adjust dynamically based on user logging behavior (adaptive TDEE)?
+Don't know how to do that.
+
+Are you tracking adherence accurately (e.g., % of logged days) for feedback loops and goal recalibration?
+Yes should do that
+
+How do you intend to handle local food variation in recognition (esp. Indian dishes that are mixed/multi-component)?
+We will use LLM model for food calorie tracking for this
+
+Will you maintain a “local food dictionary” trained via community corrections?
+Yes
+
+
+3. AI and backend logic
+Are you planning to build or integrate a food image recognition API (e.g., custom fine-tuned model vs. third-party like CalorieMama/FoodAI)?
+yes
+How will your backend aggregate image + text corrections to continuously refine the recognition model (active learning pipeline)?
+you may propose, how should I do it.
+Will macro estimation be unified across sources (photo recognition vs. manual database) to prevent inconsistency?
+you may propose, how should I do it.
+Have you defined an error confidence threshold for the model—e.g., below 70% confidence → ask user confirmation?
+Any user any way
+
+4. Health accuracy and trust
+How will you communicate uncertainty in calorie predictions to avoid overpromising precision (e.g., “±10% estimated”)?
+Yes
+Will there be disclaimers or an educational layer (as present in your Calorie Calculation README) integrated contextually during setup?
+No need
+Have you considered optional verification via wearables (e.g., automatic calorie balance check from TDEE vs. logged meals)?
+No
+
+5. Business & differentiation
+What is your unique moat vs. other calorie tracking apps like MyFitnessPal or Yazio? Is the core differentiator photo recognition quality, regional food accuracy, or adaptive metabolic insights?
+photo recognition quality, regional food accuracy, & adaptive metabolic insights are my 
+
+Will the app eventually offer AI-driven nutrition guidance (“your protein intake is trending low — try higher-protein breakfasts”)?
+Yes, thats the ultimate goal
+
+Are you positioning it as a consumer wellness app or considering insurance / employer wellness tie-ins later?
+consumer wellness app
+
+6. Scalability and compliance
+How are you planning to store and anonymize meal photos (GDPR/India DPDP compliance)?
+you may propose, how should I do it.
+
+Will users have an option to delete image data or keep it for AI personalization purposes?
+No
+If wearables are connected, how will you handle third-party API rate limits and version mismatches (Apple/Google Health updates)?
+Yes

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FoodVision - Activity</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#1A2E22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .symbol-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen relative flex flex-col font-display antialiased text-slate-900 dark:text-slate-50 pb-24 overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between px-4 py-3">
+<h1 class="text-xl font-bold tracking-tight">Activity</h1>
+<button class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined">sync</span>
+</button>
+</div>
+</header>
+<!-- Content Container -->
+<main class="flex-1 w-full max-w-md mx-auto p-4 flex flex-col gap-6">
+<!-- Date & Sync Status Section -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Today, Oct 24</h2>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-400">Apple Health</span>
+</div>
+</div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Last synced: 10:02 AM</p>
+</div>
+<!-- Main Card: Active Calories -->
+<div class="bg-card-light dark:bg-card-dark rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-6xl text-primary">local_fire_department</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-6">
+<!-- Circular Progress -->
+<div class="relative w-48 h-48 flex items-center justify-center">
+<!-- Background Circle -->
+<div class="absolute inset-0 rounded-full border-[12px] border-slate-100 dark:border-slate-700"></div>
+<!-- Progress Circle (Simulated with Conic Gradient for simplicity without SVG complexity) -->
+<!-- In a real app, this would be an SVG stroke-dasharray -->
+<div class="absolute inset-0 rounded-full" style="background: conic-gradient(transparent 0deg, #13ec5b 0deg 270deg, transparent 270deg); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 12px), #fff calc(100% - 12px)); mask: radial-gradient(farthest-side, transparent calc(100% - 12px), #fff calc(100% - 12px));">
+</div>
+<!-- Center Content -->
+<div class="flex flex-col items-center z-10">
+<span class="material-symbols-outlined text-primary mb-1 symbol-filled text-3xl">local_fire_department</span>
+<h3 class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">450</h3>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">/ 600 kcal</p>
+</div>
+</div>
+<div class="w-full">
+<div class="flex justify-between items-end mb-1">
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Daily Goal</span>
+<span class="text-sm font-bold text-primary">75%</span>
+</div>
+<div class="h-2 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 75%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Metrics Grid -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Steps Card -->
+<div class="col-span-1 bg-card-light dark:bg-card-dark rounded-xl p-4 shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-500 dark:text-blue-400">
+<span class="material-symbols-outlined">footprint</span>
+</div>
+<span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400">84%</span>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">8,432</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Steps</p>
+</div>
+<!-- Mini bar -->
+<div class="h-1.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mt-auto">
+<div class="h-full bg-blue-500 rounded-full" style="width: 84%"></div>
+</div>
+</div>
+<!-- Exercise Card -->
+<div class="col-span-1 bg-card-light dark:bg-card-dark rounded-xl p-4 shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<div class="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-orange-500 dark:text-orange-400">
+<span class="material-symbols-outlined">fitness_center</span>
+</div>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">45<span class="text-base font-medium text-slate-400 ml-1">min</span></h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Exercise</p>
+</div>
+<!-- Mini bar -->
+<div class="h-1.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mt-auto">
+<div class="h-full bg-orange-500 rounded-full" style="width: 100%"></div>
+</div>
+</div>
+<!-- Sleep Card (Full Width) -->
+<div class="col-span-2 bg-card-light dark:bg-card-dark rounded-xl p-4 shadow-sm border border-slate-100 dark:border-slate-800 flex items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl text-purple-500 dark:text-purple-400">
+<span class="material-symbols-outlined symbol-filled">bedtime</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">7h 20m</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Sleep Duration</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block text-sm font-bold text-primary">Good</span>
+<span class="text-xs text-slate-400">Quality</span>
+</div>
+</div>
+</div>
+<!-- Connection CTA (Subtle) -->
+<button class="w-full py-3 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">add_link</span>
+            Manage Connected Devices
+        </button>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 w-full bg-white dark:bg-[#151e18] border-t border-slate-100 dark:border-slate-800 pb-safe pt-2 px-6 z-50">
+<div class="flex justify-between items-center max-w-md mx-auto h-16">
+<button class="flex flex-col items-center justify-center gap-1 w-16 group text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 w-16 group text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">restaurant_menu</span>
+<span class="text-[10px] font-medium">Diary</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 w-16 group text-primary">
+<span class="material-symbols-outlined symbol-filled scale-110">directions_run</span>
+<span class="text-[10px] font-bold">Activity</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 w-16 group text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+<!-- iOS Home Indicator Spacing -->
+<div class="h-5 w-full"></div>
+</nav>
+</body></html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FoodVision - Day View</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "primary-content": "#052e11", 
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a3322",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hide for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-50 transition-colors duration-200">
+<div class="relative flex h-screen w-full flex-col overflow-hidden mx-auto max-w-md bg-background-light dark:bg-background-dark shadow-2xl">
+<!-- Top App Bar / Date Navigator -->
+<header class="flex-none bg-background-light dark:bg-background-dark px-4 py-3 z-20">
+<div class="flex items-center justify-between">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-transform text-slate-900 dark:text-white">
+<span class="material-symbols-outlined" style="font-size: 24px;">chevron_left</span>
+</button>
+<div class="flex flex-col items-center">
+<h2 class="text-lg font-bold leading-tight tracking-tight">Today, Oct 24</h2>
+<!-- Optional: subtle hint of "yesterday" or scroll interaction could go here -->
+</div>
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-transform text-slate-900 dark:text-white">
+<span class="material-symbols-outlined" style="font-size: 24px;">chevron_right</span>
+</button>
+</div>
+</header>
+<!-- Main Scrollable Content -->
+<main class="flex-1 overflow-y-auto overflow-x-hidden pb-32 no-scrollbar">
+<!-- Summary Section -->
+<section class="px-4 py-2">
+<div class="rounded-2xl bg-surface-light dark:bg-surface-dark p-5 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex justify-between items-end mb-3">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Calories</p>
+<div class="flex items-baseline gap-1">
+<span class="text-3xl font-bold tracking-tight">1,240</span>
+<span class="text-sm text-slate-400 font-medium">/ 2,000 kcal</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-medium text-primary dark:text-primary">760 left</p>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="relative h-3 w-full rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-primary rounded-full" style="width: 62%;"></div>
+</div>
+<!-- Macro Summary Row -->
+<div class="flex mt-6 justify-between gap-2">
+<div class="flex flex-col items-center flex-1">
+<span class="text-xs text-slate-500 dark:text-slate-400 mb-1">Protein</span>
+<div class="h-1.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mb-1">
+<div class="h-full bg-blue-400 w-[70%]"></div>
+</div>
+<span class="text-xs font-semibold">92/140g</span>
+</div>
+<div class="flex flex-col items-center flex-1">
+<span class="text-xs text-slate-500 dark:text-slate-400 mb-1">Carbs</span>
+<div class="h-1.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mb-1">
+<div class="h-full bg-yellow-400 w-[45%]"></div>
+</div>
+<span class="text-xs font-semibold">120/250g</span>
+</div>
+<div class="flex flex-col items-center flex-1">
+<span class="text-xs text-slate-500 dark:text-slate-400 mb-1">Fat</span>
+<div class="h-1.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mb-1">
+<div class="h-full bg-purple-400 w-[30%]"></div>
+</div>
+<span class="text-xs font-semibold">22/65g</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Meals List -->
+<div class="flex flex-col gap-6 px-4 mt-2">
+<!-- Breakfast -->
+<section>
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-lg font-bold">Breakfast</h3>
+<span class="text-xs font-medium text-slate-400">08:30 AM</span>
+</div>
+<div class="flex flex-col sm:flex-row items-stretch gap-4 rounded-2xl bg-surface-light dark:bg-surface-dark p-3 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="w-full sm:w-24 h-32 sm:h-auto shrink-0 bg-gray-200 rounded-xl overflow-hidden relative">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Close up of oatmeal bowl with fresh berries" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCSpMfuE4TsWRksdnezo_geSMytG8R6VJ7n-_nHpuw1QRv01wH7v0sms6RwL-y8cr_msL12K1faizdRS-ulhwG-F_H30ERfm_1ku9tHbDl_8SKY4BwShxqnnr5RZrdkwax6wFuytCyToVJn5mpOtPuVBVgTkHyUn1x6M9rJ06m3hRsE85-kcM2NXROENQ6Qo66Lewan-VU0OCCDx16ZWMQRjp5_rqTeai5m8cYQ3ibAtNxLszEJobKhZKa7hz7mBWWDt09lwVc4dRQ');"></div>
+</div>
+<div class="flex flex-col flex-1 justify-between py-1">
+<div>
+<h4 class="text-base font-bold text-slate-900 dark:text-slate-50 leading-tight">Oatmeal &amp; Berries</h4>
+<p class="text-sm text-green-600 dark:text-primary mt-1 font-medium">350 kcal</p>
+</div>
+<!-- Macros Chips -->
+<div class="flex flex-wrap gap-2 mt-3">
+<span class="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-900/30 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-700/10 dark:ring-blue-400/20">P: 12g</span>
+<span class="inline-flex items-center rounded-md bg-yellow-50 dark:bg-yellow-900/30 px-2 py-1 text-xs font-medium text-yellow-800 dark:text-yellow-300 ring-1 ring-inset ring-yellow-600/20 dark:ring-yellow-400/20">C: 45g</span>
+<span class="inline-flex items-center rounded-md bg-purple-50 dark:bg-purple-900/30 px-2 py-1 text-xs font-medium text-purple-700 dark:text-purple-300 ring-1 ring-inset ring-purple-700/10 dark:ring-purple-400/20">F: 6g</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Lunch (Empty State) -->
+<section>
+<h3 class="text-lg font-bold mb-2">Lunch</h3>
+<button class="w-full group flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:border-primary transition-all duration-200 cursor-pointer">
+<div class="size-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:text-primary" style="font-size: 24px;">add_a_photo</span>
+</div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400 group-hover:text-primary">Log your lunch</p>
+</button>
+</section>
+<!-- Dinner -->
+<section>
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-lg font-bold">Dinner</h3>
+<span class="text-xs font-medium text-slate-400">07:15 PM</span>
+</div>
+<div class="flex flex-col sm:flex-row items-stretch gap-4 rounded-2xl bg-surface-light dark:bg-surface-dark p-3 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="w-full sm:w-24 h-32 sm:h-auto shrink-0 bg-gray-200 rounded-xl overflow-hidden relative">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Grilled chicken salad bowl with avocado and greens" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAsrESgM_iaeOq5EwAUDOIQ7LSbZiHxKLk2IC2Z2s5R69flEP_kw9sRI0n4UTdlz6hMUsbiFsH2C09zLXNfolI10JZXr92RSWjqyq5VxFBuFU-OOLk-J7YOR3LjHWPInHdaDHxH1tEktZTrKD0E8UEaKhpKdstRwjCCYGHiQmGgmXDr57H9Pd3xmxRuxvd7We_KLk9DFDwFZH1dBWkQZvdcror3DS6q-dQLqUK89mUXy38uonOHYV1WGPVz0I0bYHmIvH_HrK6ZmxU');"></div>
+</div>
+<div class="flex flex-col flex-1 justify-between py-1">
+<div>
+<h4 class="text-base font-bold text-slate-900 dark:text-slate-50 leading-tight">Grilled Chicken Salad</h4>
+<p class="text-sm text-green-600 dark:text-primary mt-1 font-medium">550 kcal</p>
+</div>
+<div class="flex flex-wrap gap-2 mt-3">
+<span class="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-900/30 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-700/10 dark:ring-blue-400/20">P: 40g</span>
+<span class="inline-flex items-center rounded-md bg-yellow-50 dark:bg-yellow-900/30 px-2 py-1 text-xs font-medium text-yellow-800 dark:text-yellow-300 ring-1 ring-inset ring-yellow-600/20 dark:ring-yellow-400/20">C: 10g</span>
+<span class="inline-flex items-center rounded-md bg-purple-50 dark:bg-purple-900/30 px-2 py-1 text-xs font-medium text-purple-700 dark:text-purple-300 ring-1 ring-inset ring-purple-700/10 dark:ring-purple-400/20">F: 15g</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Snacks -->
+<section>
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-lg font-bold">Snacks</h3>
+<span class="text-xs font-medium text-slate-400">03:45 PM</span>
+</div>
+<div class="flex flex-col sm:flex-row items-stretch gap-4 rounded-2xl bg-surface-light dark:bg-surface-dark p-3 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="w-full sm:w-24 h-32 sm:h-auto shrink-0 bg-gray-200 rounded-xl overflow-hidden relative">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Handful of almonds on a wooden table" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCSh6wTIt7Q1RMo5NyvfbrD5kmHJe6Yg1m64hNlqesG2oPO4dwwz4eR7pSFWiTZNKXkRPc9tABr9Xk4O_irxM2SrG_64QTXGM7-U8sICmsFp_XjKAk5jp4lEhepBHnI1ky_MeEjYJSl2Ovq3mxMXJFdVBfsdqMJ78eUbkBl1xHOb74krcGcBXRQfwF_sz0UrCmm01NtVMc3EkKEDvuZb3OxiZA-YQWXrMUZTlQuHR4UYfm4dSiy_LfNIbTZs8pdK3NJsiKtFV9n0iU');"></div>
+</div>
+<div class="flex flex-col flex-1 justify-between py-1">
+<div>
+<h4 class="text-base font-bold text-slate-900 dark:text-slate-50 leading-tight">Almonds</h4>
+<p class="text-sm text-green-600 dark:text-primary mt-1 font-medium">150 kcal</p>
+</div>
+<!-- Only displaying calories, maybe user didn't log macros in detail -->
+<div class="flex flex-wrap gap-2 mt-3">
+<span class="inline-flex items-center rounded-md bg-slate-50 dark:bg-slate-700/30 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300">Quick Add</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Spacer -->
+<div class="h-6"></div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<div class="absolute bottom-24 right-4 z-30">
+<button class="flex items-center gap-2 h-14 pl-5 pr-6 rounded-full bg-primary text-primary-content shadow-[0_4px_20px_rgba(19,236,91,0.4)] hover:shadow-[0_6px_24px_rgba(19,236,91,0.5)] transition-all active:scale-95">
+<span class="material-symbols-outlined" style="font-size: 24px;">photo_camera</span>
+<span class="font-bold text-base">Snap Meal</span>
+</button>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="flex-none bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 pb-5 pt-2 z-20">
+<div class="flex justify-around items-center h-14">
+<a class="flex flex-col items-center gap-1 w-16 text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 26px;">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 w-16 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-size: 26px; font-variation-settings: 'FILL' 1;">restaurant</span>
+<span class="text-[10px] font-bold">Food</span>
+</a>
+<a class="flex flex-col items-center gap-1 w-16 text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 26px;">bar_chart</span>
+<span class="text-[10px] font-medium">Analytics</span>
+</a>
+<a class="flex flex-col items-center gap-1 w-16 text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 26px;">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

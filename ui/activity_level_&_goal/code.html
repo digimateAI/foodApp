@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FoodVision - Activity &amp; Goal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+            extend: {
+                colors: {
+                "primary": "#13ec5b",
+                "background-light": "#f6f8f6",
+                "background-dark": "#102216",
+                "surface-light": "#ffffff",
+                "surface-dark": "#1c3022", 
+                "text-main": "#0d1b12",
+                "text-sub": "#4c9a66",
+                },
+                fontFamily: {
+                "display": ["Inter", "sans-serif"]
+                },
+                borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+            },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-gray-100 font-display transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+<!-- Top App Bar -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 transition-colors duration-200">
+<button class="text-text-main dark:text-white flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-surface-dark transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-text-main dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Personalize Your Plan</h2>
+</div>
+<!-- Progress Bar -->
+<div class="flex flex-col gap-3 px-6 pb-2 pt-2">
+<div class="flex gap-6 justify-between items-center">
+<p class="text-text-main dark:text-gray-300 text-sm font-medium leading-normal">Step 3 of 5</p>
+<span class="text-xs font-semibold text-primary">60% Completed</span>
+</div>
+<div class="rounded-full bg-[#cfe7d7] dark:bg-surface-dark h-2 overflow-hidden">
+<div class="h-full rounded-full bg-primary" style="width: 60%;"></div>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto overflow-x-hidden pb-24 px-4 sm:px-6">
+<!-- Activity Level Section -->
+<div class="mt-6">
+<h2 class="text-text-main dark:text-white tracking-tight text-2xl font-bold leading-tight mb-2">Activity Level</h2>
+<p class="text-gray-600 dark:text-gray-400 text-base font-normal leading-normal mb-5">Select your typical activity level to calculate calorie needs.</p>
+<div class="flex flex-col gap-3" style="--radio-dot-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(19,236,91)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3ccircle cx=%278%27 cy=%278%27 r=%273%27/%3e%3c/svg%3e');">
+<!-- Option 1 -->
+<label class="group relative flex items-center gap-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-4 cursor-pointer transition-all duration-200 hover:border-primary/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:bg-primary/10 has-[:checked]:shadow-md">
+<input class="peer h-5 w-5 shrink-0 border-2 border-gray-300 dark:border-gray-500 bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-primary" name="activity_level" type="radio" value="sedentary"/>
+<div class="flex grow flex-col">
+<p class="text-text-main dark:text-white text-base font-semibold">Sedentary</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm">Little or no exercise</p>
+</div>
+</label>
+<!-- Option 2 -->
+<label class="group relative flex items-center gap-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-4 cursor-pointer transition-all duration-200 hover:border-primary/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:bg-primary/10 has-[:checked]:shadow-md">
+<input checked="" class="peer h-5 w-5 shrink-0 border-2 border-gray-300 dark:border-gray-500 bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-primary" name="activity_level" type="radio" value="lightly_active"/>
+<div class="flex grow flex-col">
+<p class="text-text-main dark:text-white text-base font-semibold">Lightly Active</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm">Light exercise 1-3 days/week</p>
+</div>
+</label>
+<!-- Option 3 -->
+<label class="group relative flex items-center gap-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-4 cursor-pointer transition-all duration-200 hover:border-primary/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:bg-primary/10 has-[:checked]:shadow-md">
+<input class="peer h-5 w-5 shrink-0 border-2 border-gray-300 dark:border-gray-500 bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-primary" name="activity_level" type="radio" value="moderately_active"/>
+<div class="flex grow flex-col">
+<p class="text-text-main dark:text-white text-base font-semibold">Moderately Active</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm">Moderate exercise 3-5 days/week</p>
+</div>
+</label>
+<!-- Option 4 -->
+<label class="group relative flex items-center gap-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-4 cursor-pointer transition-all duration-200 hover:border-primary/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:bg-primary/10 has-[:checked]:shadow-md">
+<input class="peer h-5 w-5 shrink-0 border-2 border-gray-300 dark:border-gray-500 bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-primary" name="activity_level" type="radio" value="very_active"/>
+<div class="flex grow flex-col">
+<p class="text-text-main dark:text-white text-base font-semibold">Very Active</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm">Hard exercise 6-7 days/week</p>
+</div>
+</label>
+<!-- Option 5 -->
+<label class="group relative flex items-center gap-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-4 cursor-pointer transition-all duration-200 hover:border-primary/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:bg-primary/10 has-[:checked]:shadow-md">
+<input class="peer h-5 w-5 shrink-0 border-2 border-gray-300 dark:border-gray-500 bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-primary" name="activity_level" type="radio" value="extremely_active"/>
+<div class="flex grow flex-col">
+<p class="text-text-main dark:text-white text-base font-semibold">Extremely Active</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm">Physical job or training 2x/day</p>
+</div>
+</label>
+</div>
+</div>
+<!-- Divider -->
+<div class="h-px bg-gray-200 dark:bg-gray-700 my-8 mx-2"></div>
+<!-- Goal Section -->
+<div class="mb-4">
+<h2 class="text-text-main dark:text-white tracking-tight text-2xl font-bold leading-tight mb-2">Primary Goal</h2>
+<p class="text-gray-600 dark:text-gray-400 text-base font-normal leading-normal mb-5">We'll adjust your macro ratios based on this goal.</p>
+<div class="grid grid-cols-3 gap-3">
+<!-- Goal: Weight Loss -->
+<label class="group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-4 cursor-pointer text-center transition-all duration-200 hover:border-primary/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:bg-primary/10 has-[:checked]:shadow-md h-32">
+<input checked="" class="peer sr-only" name="primary_goal" type="radio" value="weight_loss"/>
+<div class="rounded-full bg-gray-100 dark:bg-gray-800 p-2.5 text-gray-600 dark:text-gray-300 group-has-[:checked]:bg-primary group-has-[:checked]:text-black transition-colors">
+<span class="material-symbols-outlined text-[28px]">trending_down</span>
+</div>
+<span class="text-sm font-semibold text-text-main dark:text-white">Weight<br/>Loss</span>
+</label>
+<!-- Goal: Maintenance -->
+<label class="group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-4 cursor-pointer text-center transition-all duration-200 hover:border-primary/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:bg-primary/10 has-[:checked]:shadow-md h-32">
+<input class="peer sr-only" name="primary_goal" type="radio" value="maintenance"/>
+<div class="rounded-full bg-gray-100 dark:bg-gray-800 p-2.5 text-gray-600 dark:text-gray-300 group-has-[:checked]:bg-primary group-has-[:checked]:text-black transition-colors">
+<span class="material-symbols-outlined text-[28px]">balance</span>
+</div>
+<span class="text-sm font-semibold text-text-main dark:text-white">Maintain<br/>Weight</span>
+</label>
+<!-- Goal: Muscle Gain -->
+<label class="group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-4 cursor-pointer text-center transition-all duration-200 hover:border-primary/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:bg-primary/10 has-[:checked]:shadow-md h-32">
+<input class="peer sr-only" name="primary_goal" type="radio" value="muscle_gain"/>
+<div class="rounded-full bg-gray-100 dark:bg-gray-800 p-2.5 text-gray-600 dark:text-gray-300 group-has-[:checked]:bg-primary group-has-[:checked]:text-black transition-colors">
+<span class="material-symbols-outlined text-[28px]">fitness_center</span>
+</div>
+<span class="text-sm font-semibold text-text-main dark:text-white">Muscle<br/>Gain</span>
+</label>
+</div>
+</div>
+<!-- Bottom Spacer -->
+<div class="h-4"></div>
+</div>
+<!-- Sticky Footer -->
+<div class="absolute bottom-0 left-0 right-0 z-20 w-full bg-gradient-to-t from-background-light via-background-light to-transparent dark:from-background-dark dark:via-background-dark pt-8 pb-6 px-4">
+<button class="flex w-full items-center justify-center rounded-xl bg-primary px-5 py-4 text-base font-bold text-[#051109] transition-transform active:scale-[0.98] shadow-lg shadow-primary/25 hover:bg-primary/90">
+                Next Step
+            </button>
+</div>
+</div>
+</body></html>

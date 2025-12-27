@@ -1,0 +1,386 @@
+# FoodVision – Photo-Based Food & Calorie Tracking App
+
+FoodVision is a mobile app (Android + iOS) that lets users track calories and macros using **meal photos + manual logging**, backed by an evidence-based calorie engine. [file:1][file:2]
+
+## Core value props
+
+- Take a **photo of your meal** → get calorie and macro estimates.
+- Strong coverage for **Indian and regional foods** via LLM + local food dictionary.
+- **Evidence-based** BMR/TDEE + goal calories (weight loss, maintenance, muscle gain). [file:2]
+- Activity & sleep sync from Apple Health / Google Fit / Samsung Health. [file:1]
+
+---
+
+## High-level architecture
+
+- **Mobile app** (React Native / Flutter)
+  - Tabs: Home, Food, Activity, Profile. [file:1]
+
+- **Backend**
+  - Auth & User Service
+  - Calorie Engine Service (BMR/TDEE, goal targets using Calorie-Calculation.md) [file:2]
+  - Food & Nutrition Service (canonical food DB + local foods)
+  - Meal Logging Service (photo + manual flows) [file:1]
+  - Activity & Sleep Service (wearable integrations) [file:1]
+  - Insights Service (adherence, trends, adaptive TDEE) [file:2]
+
+- **ML/AI**
+  - Food Vision API (image → dish labels + confidence) [file:1]
+  - Nutrition LLM (maps names to DB, infers macros if missing)
+  - Active learning pipeline (uses user corrections for future model training)
+
+- **Storage**
+  - Relational DB (Postgres/MySQL)
+  - Object storage for meal photos (UUID keys)
+  - Analytics warehouse/lake for long-term analysis and model training
+
+---
+
+## Features
+
+- Onboarding:
+  - Sign up with Google, Apple, or Email. [file:1]
+  - Capture age, gender, height, weight, units. [file:1]
+  - Select activity level & goal (lose, maintain, gain). [file:1][file:2]
+  - Show daily calorie target and macro guidance. [file:2]
+  - Optional connect to Apple Health / Google Fit / Samsung Health. [file:1]
+
+- Home:
+  - Today’s calories consumed vs target.
+  - Sleep summary, activity summary.
+  - Quick “Log meal” CTA. [file:1]
+
+- Food:
+  - Breakfast / Lunch / Dinner / Snacks sections. [file:1]
+  - Log via photo or manual search.
+  - Recognition result screen with editable items.
+  - Meal summary: photo, items, calories, macros, daily impact. [file:1][file:2]
+
+- Activity:
+  - Steps, exercise, and sleep per day from connected services. [file:1]
+
+- Profile:
+  - Account & personal details.
+  - Goals & daily target.
+  - Connected devices and notifications. [file:1]
+
+---
+
+## Repos
+
+- `/backend` – API, BMR/TDEE engine, food DB, meal logging, activity integrations.
+- `/mobile` – React Native / Flutter app (Android & iOS).
+- `/ml` – Food vision service, LLM glue, training scripts (later).
+
+See `backend/README.md` and `mobile/README.md` for vibe‑coding details.
+
+
+
+# FoodVision Backend
+
+Backend for FoodVision – a photo-based food tracking app. Provides APIs for auth, users, calories, meals, foods, activity, and insights. [file:1][file:2]
+
+## Stack (suggested)
+
+- Runtime: Node.js + TypeScript OR Python + FastAPI.
+- DB: Postgres (via Prisma/SQLAlchemy).
+- Storage: S3/GCS for meal photos.
+- Auth: JWT + OAuth (Google, Apple).
+
+---
+
+## Core responsibilities
+
+- Implement calorie logic as per `Calorie-Calculation.md` (BMR, TDEE, goals, macros). [file:2]
+- Manage users, profiles, goals, and activity level. [file:1]
+- Manage foods, meals, meal items, and meal photos. [file:1]
+- Integrate with Food Vision API + Nutrition LLM.
+- Integrate with health platforms (Apple Health, Google Fit, Samsung Health). [file:1]
+- Generate daily/weekly summaries and adaptive TDEE. [file:2]
+
+---
+
+## Domain model (minimum)
+
+**User & profile**
+
+- `User`
+  - id, email, auth_provider, created_at
+- `Profile`
+  - user_id
+  - name, age, gender
+  - height_value, height_unit
+  - weight_value, weight_unit
+  - activity_level (sedentary, light, moderate, very, extreme)
+- `Goal`
+  - user_id
+  - type (loss, maintenance, gain)
+  - target_daily_calories
+  - target_protein_g, target_carbs_g, target_fat_g
+
+**Food & meals**
+
+- `Food`
+  - id, name, locale, aliases, default_portion, default_unit
+  - calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g
+  - source (canonical, community, llm_estimated)
+- `Meal`
+  - id, user_id, date, meal_type (breakfast/lunch/dinner/snacks)
+  - total_calories, total_protein_g, total_carbs_g, total_fat_g
+- `MealItem`
+  - id, meal_id, food_id
+  - name_override?, portion_value, portion_unit
+  - calories, protein_g, carbs_g, fat_g
+- `MealPhoto`
+  - id, meal_id, image_uri, status (uploaded, analyzed, failed)
+  - raw_prediction (JSON), final_label_set (JSON)
+
+**Activity & sleep**
+
+- `DeviceConnection`
+  - id, user_id, provider (apple, google, samsung)
+  - access_tokens, scopes
+- `DailyActivity`
+  - id, user_id, date
+  - steps, exercise_minutes, exercise_calories
+  - sleep_minutes
+
+**Summaries & tuning**
+
+- `DailySummary`
+  - user_id, date
+  - calories_target, calories_consumed
+  - protein_g, carbs_g, fat_g
+  - steps, sleep_minutes
+- `AdaptiveTDEEState`
+  - user_id
+  - current_tdee_estimate
+  - last_recalculated_at
+
+---
+
+## Key endpoints (sketch)
+
+Auth & user
+
+- `POST /auth/signup`
+- `POST /auth/login`
+- `GET /me`
+- `PUT /me/profile`
+- `PUT /me/goal`
+
+Calories & plan
+
+- `POST /calories/plan`
+  - body: age, gender, height, weight, units, activity_level, goal_type
+  - returns: bmr, tdee, target_calories, suggested_macros. [file:2]
+
+Food & meals
+
+- `GET /foods/search?q=dal`
+- `POST /foods/custom`
+- `GET /me/meals?date=YYYY-MM-DD`
+- `POST /me/meals` (create draft meal)
+- `POST /me/meals/{id}/photo` (upload, returns signed URL / triggers analysis)
+- `POST /me/meals/{id}/items` (set items after UI edit)
+- `POST /me/meals/{id}/finalize`
+
+Activity & summary
+
+- `GET /me/activity?date=YYYY-MM-DD`
+- `GET /me/summaries/today`
+- `GET /me/summaries/week`
+- `POST /me/activity/sync` (webhooks/background jobs)
+
+---
+
+## Calorie engine contract
+
+Implementation must follow `Calorie-Calculation.md`: [file:2]
+
+- Mifflin-St Jeor BMR:
+  - Males: \(10×kg + 6.25×cm − 5×years + 5\)
+  - Females: \(10×kg + 6.25×cm − 5×years − 161\)
+- TDEE = BMR × activity_factor.
+  - 1.2 / 1.375 / 1.55 / 1.725 / 1.9 [file:2]
+- Goals:
+  - Loss: target_calories = TDEE − 500 (default).
+  - Maintenance: TDEE ± 100.
+  - Gain: TDEE + 400 (default). [file:2]
+- Macro suggestions:
+  - Use ranges from README for protein, carbs, fat per goal. [file:2]
+
+---
+
+## ML integration points
+
+- **Food Vision Service**
+  - Input: signed image URL.
+  - Output: `{ items: [{ name, confidence, bbox? }], error? }`. [file:1]
+
+- **Nutrition LLM**
+  - Input: list of candidate item names, locale, user goal.
+  - Output: canonical food IDs + macros (from DB or inferred).
+
+---
+
+## Example “vibe coding” prompt for backend codegen
+
+Use this to ask your codegen LLM:
+
+> You are a senior backend engineer using Node.js, TypeScript, Express, and Prisma with PostgreSQL.
+> Implement the initial version of the FoodVision backend with:
+> - Models: User, Profile, Goal, Food, Meal, MealItem, MealPhoto, DailyActivity, DailySummary as described in backend/README.md. [file:1][file:2]
+> - Calorie engine that implements Mifflin-St Jeor BMR, TDEE, and goal calorie logic exactly as per Calorie-Calculation.md. [file:2]
+> - REST endpoints: /auth/signup, /auth/login, /me, /me/profile, /me/goal, /calories/plan, /foods/search, /me/meals (list/create), /me/meals/:id/photo, /me/meals/:id/items, /me/meals/:id/finalize, /me/activity, /me/summaries/today.
+> - Use JWT auth middleware and basic request validation.
+> Generate:
+> - Prisma schema
+> - Express route handlers skeleton
+> - Service-layer functions for calorie plan and meal creation
+> - Example unit tests for the calorie engine and /calories/plan.
+
+
+
+# FoodVision Mobile App (Android & iOS)
+
+Cross-platform mobile app (React Native or Flutter) for FoodVision – photo-based calorie and macro tracking. [file:1][file:2]
+
+## Tech stack (suggested)
+
+- React Native (TypeScript) OR Flutter (Dart).
+- Navigation:
+  - React Navigation (RN) or go_router (Flutter).
+- State management:
+  - Zustand / Redux Toolkit (RN) or Riverpod / Bloc (Flutter).
+- Networking: Axios / Fetch (RN), http/dio (Flutter).
+
+---
+
+## Information architecture
+
+Bottom tab bar: [file:1]
+
+1. **Home**
+2. **Food**
+3. **Activity**
+4. **Profile**
+
+---
+
+## Screens
+
+### Onboarding
+
+1. Welcome & sign up [file:1]
+   - Sign up with Google / Apple / Email.
+2. Personal details [file:1]
+   - Age, gender, height (cm / ft+in), weight (kg / lb).
+3. Activity level & goal [file:1][file:2]
+   - Sedentary → Extremely active.
+   - Goal: weight loss / maintenance / muscle gain.
+4. Daily target preview [file:2]
+   - Shows calculated BMR, TDEE, daily calories, suggested macros.
+   - One-line explanation: “Based on your age, height, weight, activity and goal.” [file:2]
+5. Connect devices [file:1]
+   - Apple Health (iOS), Google Fit / Samsung Health (Android).
+6. Get started
+   - Navigates to Home.
+
+### Home tab
+
+- Widgets:
+  - Today’s calories: consumed vs target, progress ring/bar. [file:1]
+  - Sleep summary: last night duration.
+  - Activity summary: steps and exercise minutes/calories. [file:1]
+- Actions:
+  - “Log meal” primary button.
+  - Links into detailed Food and Activity screens.
+
+### Food tab
+
+- Day selector (Today, arrows for previous/next).
+- Meal cards: Breakfast, Lunch, Dinner, Snacks. [file:1]
+  - Show total calories + key macros if logged.
+- “Log meal” flow: [file:1]
+  - Step 1: Choose meal type.
+  - Step 2: Choose “Take photo” or “Log manually”.
+  - Step 3: If photo:
+    - Camera view, capture, preview.
+    - Loading state while calling Food Vision API.
+    - Result list with foods, macros, and editable portions.
+  - Step 4: Meal summary:
+    - Meal photo or placeholder.
+    - Items list, total calories, macros, daily impact. [file:1][file:2]
+    - Confirm/save.
+
+### Activity tab
+
+- Daily view: [file:1]
+  - Steps.
+  - Exercise (minutes, calories).
+  - Sleep (hours/minutes).
+- Show “last synced at…” and connection status.
+
+### Profile tab
+
+- Sections: [file:1]
+  - Account (name, email).
+  - Personal details (age, gender, height, weight with units).
+  - Goal & daily target.
+  - Connected devices (Apple/Google/Samsung).
+  - Notifications (meal reminders, daily summary).
+
+---
+
+## State & networking
+
+- Persist auth token, profile, and last known daily target locally (AsyncStorage / SharedPreferences).
+- On app start:
+  - If token → fetch `/me`, `/calories/plan` (if needed), `/me/summaries/today`.
+- For meal logging:
+  - Draft meal created before upload (optimistic UI).
+  - Photo uploaded → show “Analyzing your meal…” state.
+  - Result applied to local state, then saved when user confirms.
+
+---
+
+## Design vibe
+
+- Clean, calm health/wellness palette (soft greens/blues + neutral backgrounds).
+- Emphasize **one main action per screen** (e.g., Log meal on Home).
+- Reuse components:
+  - Primary button
+  - Card with header + value + chip (e.g., “Calories remaining”)
+  - List row with avatar (for foods with small thumbnail)
+  - Tag for meal type (Breakfast/Lunch/Dinner/Snacks)
+
+---
+
+## Example prompts for design & UI codegen
+
+### Prompt – High-fidelity wireframes
+
+> You are a senior product designer.  
+> Using the flows described in mobile/README.md, design high-fidelity mobile screens (iOS & Android) for the FoodVision app. [file:1][file:2]
+> Focus on:
+> - Onboarding (sign up, personal details, goals, daily target preview, connect devices).
+> - Home dashboard with calories, sleep, activity, log meal CTA.
+> - Food tab with meal cards and “Log meal via photo/manual” flow (including recognition result and meal summary). [file:1]
+> - Activity tab with steps, exercise, sleep, and sync status.
+> - Profile tab with account, personal details, goals, connected devices, and notifications. [file:1]
+> Use a calm wellness palette, clear hierarchy, and provide layout descriptions suitable for Figma implementation.
+
+### Prompt – React Native screen scaffolds
+
+> You are a senior React Native engineer using TypeScript and React Navigation.  
+> Generate screen components and navigation setup for the FoodVision app as described in mobile/README.md: [file:1][file:2]
+> - Bottom tabs: Home, Food, Activity, Profile.
+> - Stack for onboarding: Welcome, PersonalDetails, ActivityGoal, TargetPreview, ConnectDevices.
+> - Implement dummy layouts for:
+>   - HomeScreen: shows today’s calories, sleep, activity, and a “Log Meal” button.
+>   - FoodScreen: shows meal cards and a “Log Meal” button.
+>   - LogMealFlow: choose meal type, choose method (photo/manual), stub CameraScreen and ManualEntryScreen.
+>   - ActivityScreen and ProfileScreen with placeholder sections.
+> Use functional components, hooks, and simple placeholder data; wire them to a fake API module that returns mocked responses following backend/README contracts.
+

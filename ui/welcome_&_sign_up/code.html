@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FoodVision - Welcome</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hide for cleaner UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-slate-900 dark:text-white transition-colors duration-200">
+<div class="relative flex min-h-screen w-full flex-col justify-between overflow-hidden">
+<!-- Decorative Background Elements -->
+<div class="absolute top-0 left-0 w-full h-[60%] bg-gradient-to-b from-primary/10 to-transparent dark:from-primary/5 pointer-events-none z-0"></div>
+<div class="absolute -top-20 -right-20 w-64 h-64 bg-primary/20 rounded-full blur-3xl pointer-events-none z-0"></div>
+<!-- Main Content Wrapper -->
+<div class="relative z-10 flex flex-col flex-1 px-6 pt-12 pb-6 w-full max-w-md mx-auto">
+<!-- Hero Section -->
+<div class="flex-1 flex flex-col items-center justify-center space-y-8 mt-4">
+<!-- Logo & Brand -->
+<div class="flex flex-col items-center gap-4 animate-fade-in-up">
+<div class="w-24 h-24 bg-gradient-to-tr from-primary to-emerald-400 rounded-3xl shadow-xl flex items-center justify-center rotate-3 hover:rotate-6 transition-transform duration-300">
+<span class="material-symbols-outlined text-background-dark text-5xl">shutter_speed</span>
+</div>
+</div>
+<!-- Text Content -->
+<div class="flex flex-col items-center text-center max-w-xs">
+<h1 class="text-slate-900 dark:text-white tracking-tight text-4xl font-extrabold leading-tight pb-3">
+                        FoodVision
+                    </h1>
+<p class="text-slate-600 dark:text-slate-300 text-lg font-medium leading-relaxed">
+                        Snap, Track, Thrive. <br/>Your diet decoded in a snap.
+                    </p>
+</div>
+<!-- Visual Element / Mini Grid -->
+<div class="w-full max-w-[280px] grid grid-cols-2 gap-3 opacity-90">
+<div class="w-full bg-center bg-no-repeat bg-cover rounded-xl aspect-square shadow-sm transform translate-y-4" data-alt="Close up of a fresh avocado salad bowl" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCGIrkwTkSAVaVN4nmDueK6lQZuPuRAJuvAnBoTFL8ww2Lx5PXFnIjtgmJAaPeKnG6dPBvVWoGNe_KN7Lm_E1P-sdh6Zt7UM99QZEKcSvZVguGKAbparO3bBt7ddbj6hxNCKnIf7qKK5LbanIF_tOVV93QZYfu7eQQjpsbl34-xDfNadoMmOZ4NV0vN9QzFG4IRDLXgwx4Y-mJ3inlIut6nozc_f_G4evbrOPF2W1VV1C8T_kV0wLXsRT7VJ76B9XaSIRNJRbRNCqA");'></div>
+<div class="w-full bg-center bg-no-repeat bg-cover rounded-xl aspect-square shadow-sm" data-alt="Healthy green smoothie with kiwi" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDgPhsZZTK5rP-23cWUe5f_XvyR5KEjy30470qToPwFVw6EnLdQOC2w6KcSsYgbhnN4gXAMKvWI5SB9WHilcAoKYJUJTEGaLc7UZ-GifE9a4gHfzdKOqXCKOAX1dJzQEUWAr-XDPUiCtnlkgFOxwTJiVH6kGplKjP-GKLWiv7Y0s_BwJ8eNvGhmr6HCNxA-u1GhgqOeKWLx6iUzoDgVrXPTzscN05FcPiyjMuXgVK_I9ASXkAZRrmEFvAAJbIAVT_P_Of-Vvn693pM");'></div>
+</div>
+</div>
+<!-- Actions Section -->
+<div class="flex flex-col gap-4 mt-8 w-full">
+<!-- Primary Button -->
+<button class="group flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em] hover:bg-emerald-400 transition-all active:scale-[0.98] shadow-lg shadow-primary/25">
+<span class="mr-2">Get Started Free</span>
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<!-- Divider -->
+<div class="relative py-2">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-slate-200 dark:border-slate-700"></div>
+</div>
+<div class="relative flex justify-center text-xs uppercase">
+<span class="bg-background-light dark:bg-background-dark px-2 text-slate-500">Or continue with</span>
+</div>
+</div>
+<!-- Social Buttons Stack -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Apple Button -->
+<button class="flex items-center justify-center gap-2 h-12 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold text-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">ios</span>
+<span>Apple</span>
+</button>
+<!-- Google Button -->
+<button class="flex items-center justify-center gap-2 h-12 rounded-xl bg-white dark:bg-slate-800 text-slate-700 dark:text-white border border-slate-200 dark:border-slate-700 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<svg class="w-5 h-5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+<span>Google</span>
+</button>
+</div>
+</div>
+<!-- Footer Login Link -->
+<div class="mt-8 text-center">
+<p class="text-slate-500 dark:text-slate-400 text-sm">
+                    Already have an account? 
+                    <a class="text-slate-900 dark:text-white font-bold hover:underline decoration-primary decoration-2 underline-offset-2" href="#">Log In</a>
+</p>
+<div class="mt-6 text-xs text-slate-400 dark:text-slate-600 text-center px-4">
+                    By signing up, you agree to our <a class="underline" href="#">Terms</a> and <a class="underline" href="#">Privacy Policy</a>.
+                </div>
+</div>
+</div>
+<!-- Safe Area Spacer for iOS Home Indicator -->
+<div class="h-6 w-full"></div>
+</div>
+</body></html>

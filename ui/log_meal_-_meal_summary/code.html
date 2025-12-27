@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Log Meal - Meal Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better mobile feel */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display">
+<div class="relative flex h-full min-h-screen w-full max-w-md mx-auto flex-col group/design-root overflow-x-hidden shadow-2xl border-x border-slate-100 dark:border-slate-800">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-20 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 pb-2 justify-between border-b border-transparent">
+<div class="cursor-pointer text-slate-800 dark:text-white flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</div>
+<h2 class="text-slate-800 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Meal Summary</h2>
+</div>
+<div class="flex-1 overflow-y-auto pb-24">
+<!-- Hero Image -->
+<div class="@container px-4 py-3">
+<div class="relative w-full aspect-[4/3] bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden bg-slate-200 dark:bg-slate-800 rounded-xl shadow-sm" data-alt="Healthy bowl of grilled chicken quinoa and avocado" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBWPaQfH0FrfPn17GJs9fNPmj7pxMT8wy7bgjdIqr-TuoqfA3wu8lVL9uHql9XS58PFy101haLc67idtbskKjA22mDBLy0YkEggrch88YS7XWyDxgRuJOJsP3MRjcJTcu2NvkPtwoNCtjeszF0LIttiIUcZLL5y0vCxP3bTbqeqtK2k_Fjk_hNGZlJ-LHerQQPvpGe_uliw9rq0vtcdSi7DMPVsatZphW1zG3guZQYltUl0LBIubze4a5ExmAMddYT-6Yoa2s39APU");'>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="relative p-4 z-10 flex justify-between items-end">
+<span class="bg-black/40 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1 rounded-full border border-white/20">
+                            Lunch
+                        </span>
+<button class="bg-white/20 backdrop-blur-md text-white size-10 flex items-center justify-center rounded-full border border-white/20 hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Headline Stats -->
+<div class="flex flex-col items-center px-4 pt-4 pb-6">
+<h1 class="text-slate-900 dark:text-white tracking-tight text-[40px] font-bold leading-none">540 <span class="text-lg font-medium text-slate-500 dark:text-slate-400 align-top mt-2 inline-block">kcal</span></h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Logged today at 12:30 PM</p>
+</div>
+<!-- Macro Stats Cards -->
+<div class="flex gap-3 px-4 mb-6">
+<!-- Protein -->
+<div class="flex-1 flex flex-col gap-1 rounded-xl p-4 bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700">
+<div class="flex items-center gap-2 mb-1">
+<div class="size-2 rounded-full bg-primary"></div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wider">Protein</p>
+</div>
+<p class="text-slate-900 dark:text-white text-2xl font-bold leading-tight">35<span class="text-sm font-medium text-slate-400 ml-0.5">g</span></p>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<!-- Carbs -->
+<div class="flex-1 flex flex-col gap-1 rounded-xl p-4 bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700">
+<div class="flex items-center gap-2 mb-1">
+<div class="size-2 rounded-full bg-blue-400"></div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wider">Carbs</p>
+</div>
+<p class="text-slate-900 dark:text-white text-2xl font-bold leading-tight">45<span class="text-sm font-medium text-slate-400 ml-0.5">g</span></p>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-blue-400 h-full rounded-full" style="width: 55%"></div>
+</div>
+</div>
+<!-- Fat -->
+<div class="flex-1 flex flex-col gap-1 rounded-xl p-4 bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700">
+<div class="flex items-center gap-2 mb-1">
+<div class="size-2 rounded-full bg-yellow-400"></div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wider">Fat</p>
+</div>
+<p class="text-slate-900 dark:text-white text-2xl font-bold leading-tight">15<span class="text-sm font-medium text-slate-400 ml-0.5">g</span></p>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-yellow-400 h-full rounded-full" style="width: 25%"></div>
+</div>
+</div>
+</div>
+<!-- Food Item List -->
+<div class="px-4 mb-6">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-slate-900 dark:text-white text-base font-bold">Items Detected</h3>
+<button class="text-primary text-sm font-medium hover:text-green-600 transition-colors">Edit List</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Item 1 -->
+<div class="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-xl">🍗</div>
+<div>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">Grilled Chicken Breast</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs">150g serving</p>
+</div>
+</div>
+<p class="text-slate-900 dark:text-white text-sm font-bold">240 kcal</p>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-xl">🥑</div>
+<div>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">Avocado</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs">1/2 medium</p>
+</div>
+</div>
+<p class="text-slate-900 dark:text-white text-sm font-bold">160 kcal</p>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-xl">🍚</div>
+<div>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">Quinoa</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs">1 cup cooked</p>
+</div>
+</div>
+<p class="text-slate-900 dark:text-white text-sm font-bold">140 kcal</p>
+</div>
+</div>
+</div>
+<!-- Daily Impact -->
+<div class="px-4 mb-8">
+<div class="p-5 rounded-2xl bg-slate-900 dark:bg-slate-800 text-white relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-[100px] leading-none">bolt</span>
+</div>
+<p class="text-slate-300 text-sm font-medium mb-1">Daily Goal Impact</p>
+<div class="flex items-end gap-2 mb-3">
+<span class="text-3xl font-bold text-primary">850</span>
+<span class="text-slate-300 text-sm mb-1.5 font-medium">kcal remaining</span>
+</div>
+<div class="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 65%"></div>
+</div>
+<div class="flex justify-between mt-2 text-xs text-slate-400">
+<span>Consumed: 1150</span>
+<span>Goal: 2000</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Action Bar -->
+<div class="absolute bottom-0 w-full bg-white dark:bg-background-dark border-t border-slate-100 dark:border-slate-800 p-4 pb-8 flex flex-col gap-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-30">
+<button class="w-full h-12 flex items-center justify-center gap-2 bg-primary hover:bg-green-500 active:scale-[0.98] text-slate-900 font-bold rounded-lg transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+                Save to Daily Log
+            </button>
+<button class="w-full h-12 flex items-center justify-center gap-2 bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-[0.98] text-slate-500 dark:text-slate-400 font-medium rounded-lg transition-all">
+                Edit Details
+            </button>
+</div>
+</div>
+</body></html>

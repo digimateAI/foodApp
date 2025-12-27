@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Log Meal - Take Photo</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom styles for camera viewfinder overlay */
+        .camera-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,0.6) 100%);
+        }
+        
+        .scan-line {
+            animation: scan 3s infinite linear;
+            box-shadow: 0 0 10px #13ec5b;
+        }
+        
+        @keyframes scan {
+            0% { top: 10%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 90%; opacity: 0; }
+        }
+
+        .reticle-corner {
+            border-color: #13ec5b;
+            width: 2rem;
+            height: 2rem;
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+
+        .shutter-btn-inner {
+            transition: transform 0.1s ease;
+        }
+        
+        .shutter-btn:active .shutter-btn-inner {
+            transform: scale(0.9);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-black font-display antialiased overflow-hidden h-screen w-full relative">
+<!-- Camera Feed Background (Simulated) -->
+<div class="absolute inset-0 w-full h-full bg-cover bg-center z-0" data-alt="Top down view of a healthy salad bowl on a wooden table, simulated camera feed" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBW80o6Brc_7I3h7q2-Sk4BpR1hGFpAPb4sfqpCd48-_jt_jmbkD1Lt_xNK-FRw9AWQ25ltXvosFhRfYmZ8CYjlbrL-xV8b25ek6napQyzjs-2m1HBZxhMMAGfayBuFhL0JKJjwPk-zU9v-A2bEAc1SQvM6KuQyG2YEf--ltNxSySQSygpuFKezNq0CpmUIc8jXOfepUM_s4NDnK4ViiuqGb1y__x7lXzod7q4Wjb3wXQplDrBlQYHtk4uE0uln3HE_xeZfse34o9g');">
+</div>
+<!-- Overlay Gradient for legibility -->
+<div class="absolute inset-0 w-full h-full camera-overlay z-10 pointer-events-none"></div>
+<!-- Main Content Container -->
+<div class="relative z-20 flex flex-col h-full justify-between pt-safe-top pb-safe-bottom">
+<!-- Top Bar -->
+<div class="flex items-center justify-between p-4 pt-12 text-white">
+<button class="flex size-10 items-center justify-center rounded-full bg-black/20 backdrop-blur-md hover:bg-black/40 transition-colors">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+<div class="flex flex-col items-center">
+<span class="text-sm font-semibold tracking-wide uppercase text-white/90 bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm">Scan Meal</span>
+</div>
+<button class="flex size-10 items-center justify-center rounded-full bg-black/20 backdrop-blur-md hover:bg-black/40 transition-colors">
+<span class="material-symbols-outlined text-2xl filled">flash_off</span>
+</button>
+</div>
+<!-- Camera Viewfinder Area -->
+<div class="flex-1 flex flex-col items-center justify-center relative w-full px-8">
+<!-- Focus Reticle / Scanner Frame -->
+<div class="relative w-full aspect-square max-w-sm border border-white/20 rounded-3xl">
+<!-- Corners -->
+<div class="reticle-corner border-t-4 border-l-4 rounded-tl-xl -top-1 -left-1"></div>
+<div class="reticle-corner border-t-4 border-r-4 rounded-tr-xl -top-1 -right-1"></div>
+<div class="reticle-corner border-b-4 border-l-4 rounded-bl-xl -bottom-1 -left-1"></div>
+<div class="reticle-corner border-b-4 border-r-4 rounded-br-xl -bottom-1 -right-1"></div>
+<!-- Scanning Line Animation -->
+<div class="absolute w-[90%] h-0.5 bg-primary left-[5%] scan-line opacity-80"></div>
+</div>
+<!-- Instructional Text -->
+<p class="mt-6 text-white text-base font-medium drop-shadow-md text-center bg-black/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+                Center your food in the frame
+            </p>
+</div>
+<!-- Control Deck (Bottom Area) -->
+<!-- Using a white background for controls to match the requested design -->
+<div class="bg-background-light dark:bg-background-dark/95 backdrop-blur-xl rounded-t-[2rem] p-6 pb-10 shadow-2xl border-t border-white/10">
+<!-- Quick Actions Row -->
+<div class="flex items-center justify-between mb-8 px-2">
+<!-- Gallery Button -->
+<button class="flex flex-col items-center gap-1 group">
+<div class="size-12 rounded-lg bg-cover bg-center border-2 border-transparent group-hover:border-primary transition-all overflow-hidden relative shadow-sm" data-alt="Thumbnail of previous meal photo showing avocado toast" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuACuFmB2CwY060jIDWH3dfqz-64PWIM_rSJM6HY57uYu5RJdsdw4xZHDmiml5CsuU7OrFtm9LZidQZqfoLgMayQyYkrGgAbbeCPt0XuTK4XCQvwV5igblIU4miYONIprvwUBAiSx9IfiMnSqN2mukVOzYcX-3H4HNbhOv-IKVid5DtGCDNZ_8D84TbY-LrmAuLz7_UPleSFzX-roXXurxkR8ZhnkP-LV1UWcPDrbYL9s11CKcO3ftKWWv9OhRmegsz4RVbdi25Z8c8');">
+<div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+</div>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Gallery</span>
+</button>
+<!-- Shutter Button -->
+<div class="relative -top-2 shutter-btn cursor-pointer">
+<!-- Outer Ring -->
+<div class="size-20 rounded-full border-4 border-gray-200 dark:border-gray-700 p-1 bg-background-light dark:bg-background-dark shadow-lg">
+<!-- Inner Button -->
+<div class="shutter-btn-inner w-full h-full rounded-full bg-primary flex items-center justify-center shadow-inner hover:brightness-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-white text-3xl">photo_camera</span>
+</div>
+</div>
+</div>
+<!-- Manual Entry Button -->
+<button class="flex flex-col items-center gap-1 group w-12">
+<div class="size-12 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-gray-800 dark:text-white group-hover:text-primary transition-colors">edit_note</span>
+</div>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">Manual</span>
+</button>
+</div>
+<!-- Alternative Text Link -->
+<div class="flex justify-center">
+<button class="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-primary transition-colors flex items-center gap-1">
+                    Having trouble? <span class="text-primary underline decoration-2 decoration-primary/30 underline-offset-2">Log Manually</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

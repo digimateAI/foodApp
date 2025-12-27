@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FoodVision - Profile Overview</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2e22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Toggle Switch Style */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #13ec5b;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #13ec5b;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100 min-h-screen flex justify-center">
+<div class="w-full max-w-md h-full min-h-screen bg-background-light dark:bg-background-dark relative overflow-hidden flex flex-col">
+<!-- Top App Bar -->
+<header class="flex items-center px-4 py-3 sticky top-0 z-10 bg-background-light dark:bg-background-dark">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-gray-900 dark:text-gray-100">arrow_back_ios_new</span>
+</button>
+<h1 class="flex-1 text-center text-lg font-bold tracking-tight text-gray-900 dark:text-gray-100">Profile</h1>
+<div class="w-10"></div> <!-- Spacer to center title -->
+</header>
+<!-- Main Content Scroll Area -->
+<main class="flex-1 overflow-y-auto px-4 pb-20 scrollbar-hide">
+<!-- User Header -->
+<div class="flex flex-col items-center pt-4 pb-8">
+<div class="relative group">
+<div class="w-24 h-24 rounded-full bg-cover bg-center border-4 border-white dark:border-surface-dark shadow-sm relative z-10" data-alt="Portrait of a young woman smiling" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDQHubDbW-Ba7GTsOxp3YooXSX-8-HFEkRCE-TlIsJOwz4yq_3nKYQY9ygDSiy-3IRQx33zPKOwbB8_6x9J6fmtxVisRZeDS0CiO-wRwORIm25J1Mf6NRvd-xeKWbEnW3n91wXEaItQnK0Ysvv55-XUkXrViz1mGQCkCQdfRVZKNBhJgcoLg7CbolwXR-_ujMq1p7kAVCsoQd4ico1ZZDfpPaEMCvxa_c4OM8D1zpjiekaxFQUxBKhlFUrLSru3Pk0HroSvAxDK-cs');">
+</div>
+<!-- Decorative subtle ring -->
+<div class="absolute -inset-1 rounded-full border border-primary/30 z-0"></div>
+</div>
+<h2 class="mt-3 text-xl font-bold text-gray-900 dark:text-white">Jane Doe</h2>
+<p class="text-sm text-gray-500 dark:text-gray-400 mb-3">jane.doe@foodvision.app</p>
+<button class="px-5 py-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary dark:text-primary font-medium text-sm transition-colors duration-200">
+                    Edit Profile
+                </button>
+</div>
+<!-- Personal Details Section -->
+<div class="mb-6">
+<h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">Personal Details</h3>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+<!-- Age -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 active:bg-gray-50 dark:active:bg-white/5 transition-colors cursor-pointer group">
+<span class="text-base font-medium text-gray-800 dark:text-gray-200">Age</span>
+<div class="flex items-center gap-2">
+<span class="text-gray-500 dark:text-gray-400">28</span>
+<span class="material-symbols-outlined text-gray-400 text-[20px]">chevron_right</span>
+</div>
+</div>
+<!-- Gender -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 active:bg-gray-50 dark:active:bg-white/5 transition-colors cursor-pointer group">
+<span class="text-base font-medium text-gray-800 dark:text-gray-200">Gender</span>
+<div class="flex items-center gap-2">
+<span class="text-gray-500 dark:text-gray-400">Female</span>
+<span class="material-symbols-outlined text-gray-400 text-[20px]">chevron_right</span>
+</div>
+</div>
+<!-- Height -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 active:bg-gray-50 dark:active:bg-white/5 transition-colors cursor-pointer group">
+<span class="text-base font-medium text-gray-800 dark:text-gray-200">Height</span>
+<div class="flex items-center gap-2">
+<span class="text-gray-500 dark:text-gray-400">168 <span class="text-xs">cm</span></span>
+<span class="material-symbols-outlined text-gray-400 text-[20px]">chevron_right</span>
+</div>
+</div>
+<!-- Weight -->
+<div class="flex items-center justify-between p-4 active:bg-gray-50 dark:active:bg-white/5 transition-colors cursor-pointer group">
+<span class="text-base font-medium text-gray-800 dark:text-gray-200">Weight</span>
+<div class="flex items-center gap-2">
+<span class="text-gray-500 dark:text-gray-400">62 <span class="text-xs">kg</span></span>
+<span class="material-symbols-outlined text-gray-400 text-[20px]">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Goal & Daily Target Section -->
+<div class="mb-6">
+<h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">Goal &amp; Targets</h3>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+<!-- Current Goal -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 active:bg-gray-50 dark:active:bg-white/5 transition-colors cursor-pointer">
+<div class="flex flex-col">
+<span class="text-base font-medium text-gray-800 dark:text-gray-200">Current Goal</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-primary font-medium">Lose Weight</span>
+<span class="material-symbols-outlined text-gray-400 text-[20px]">chevron_right</span>
+</div>
+</div>
+<!-- Calorie Target -->
+<div class="flex items-center justify-between p-4 active:bg-gray-50 dark:active:bg-white/5 transition-colors cursor-pointer">
+<div class="flex flex-col">
+<span class="text-base font-medium text-gray-800 dark:text-gray-200">Daily Calorie Target</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-gray-500 dark:text-gray-400">1,850 <span class="text-xs">kcal</span></span>
+<span class="material-symbols-outlined text-gray-400 text-[20px]">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Connected Devices Section -->
+<div class="mb-6">
+<h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">Connected Devices</h3>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+<!-- Apple Health -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-gray-600 dark:text-gray-300 text-[20px]">health_and_safety</span>
+</div>
+<span class="text-base font-medium text-gray-800 dark:text-gray-200">Apple Health</span>
+</div>
+<button class="flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-md">
+                            Connected
+                            <span class="material-symbols-outlined text-[14px]">check</span>
+</button>
+</div>
+<!-- Google Fit -->
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-gray-600 dark:text-gray-300 text-[20px]">monitor_heart</span>
+</div>
+<span class="text-base font-medium text-gray-800 dark:text-gray-200">Google Fit</span>
+</div>
+<button class="text-sm font-medium text-gray-400 hover:text-primary transition-colors">
+                            Connect
+                        </button>
+</div>
+</div>
+</div>
+<!-- Notifications Section -->
+<div class="mb-8">
+<h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">Notifications</h3>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+<!-- Meal Reminders Toggle -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800">
+<div class="flex flex-col">
+<span class="text-base font-medium text-gray-800 dark:text-gray-200">Meal Reminders</span>
+<span class="text-xs text-gray-500 dark:text-gray-400">Get notified when it's time to log</span>
+</div>
+<!-- Toggle Switch -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-200 appearance-none cursor-pointer transition-all duration-300 ease-in-out shadow-sm checked:right-0 checked:border-primary" id="toggle1" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer transition-colors duration-300 ease-in-out" for="toggle1"></label>
+</div>
+</div>
+<!-- Daily Summaries Toggle -->
+<div class="flex items-center justify-between p-4">
+<div class="flex flex-col">
+<span class="text-base font-medium text-gray-800 dark:text-gray-200">Daily Summaries</span>
+<span class="text-xs text-gray-500 dark:text-gray-400">Receive a summary of your macros</span>
+</div>
+<!-- Toggle Switch -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-200 appearance-none cursor-pointer transition-all duration-300 ease-in-out shadow-sm checked:translate-x-full checked:border-primary" id="toggle2" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-200 dark:bg-gray-700 cursor-pointer transition-colors duration-300 ease-in-out" for="toggle2"></label>
+</div>
+</div>
+</div>
+</div>
+<!-- Danger Zone / Logout -->
+<div class="flex justify-center pb-8">
+<button class="text-red-500 hover:text-red-600 text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+                    Log Out
+                </button>
+</div>
+</main>
+<!-- Bottom Tab Navigation (Simulated Context) -->
+<div class="h-[80px] bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 flex justify-around items-center px-2 pb-4 pt-2 absolute bottom-0 w-full z-20">
+<div class="flex flex-col items-center gap-1 opacity-50">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium">Dashboard</span>
+</div>
+<div class="flex flex-col items-center gap-1 opacity-50">
+<span class="material-symbols-outlined">photo_camera</span>
+<span class="text-[10px] font-medium">Scan</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined filled" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</div>
+</div>
+</div>
+<script>
+        // Simple JS to handle checkbox state visual change for the custom toggle
+        const toggles = document.querySelectorAll('.toggle-checkbox');
+        toggles.forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                if(this.checked) {
+                    this.classList.add('translate-x-full');
+                    this.classList.remove('right-0'); // reset default position logic if needed
+                } else {
+                    this.classList.remove('translate-x-full');
+                }
+            });
+            // Initial state check
+            if(toggle.checked) {
+                toggle.classList.add('translate-x-full');
+            }
+        });
+    </script>
+</body></html>
