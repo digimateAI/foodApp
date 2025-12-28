@@ -4,7 +4,8 @@ const fs = require('fs');
 const path = require('path');
 
 // Configuration
-const API_URL = 'http://localhost:3000/analyze-food';
+// Configuration
+const API_URL = 'http://192.168.29.111:3000/analyze-food';
 // Create a dummy image file if one doesn't exist for testing
 const TEST_IMAGE_PATH = 'test_img.jpg';
 

@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  password       String? // Nullable for OAuth users
+  name           String
+  authProvider   String          @default("email") // email, google, apple
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  profile        Profile?
+  goals          Goal?
+  dailySummaries DailySummary[]
+  meals          Meal[]
+  activities     DailyActivity[]
+  devices        DeviceConnection[]
+}
+
+model Profile {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id])
+  age           Int?
+  gender        String? // male, female, other
+  height        Float? // in cm
+  weight        Float? // in kg
+  activityLevel String? // sedentary, light, moderate, active, very_active
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Goal {
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id])
+  type                String // loss, maintenance, gain
+  targetWeight        Float?
+  targetDailyCalories Int
+  targetProtein       Int // in grams
+  targetCarbs         Int // in grams
+  targetFat           Int // in grams
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model Food {
+  id              String     @id @default(uuid())
+  name            String
+  brand           String?
+  calories        Int // per 100g or per serving
+  protein         Float
+  carbs           Float
+  fat             Float
+  servingSize     Float      @default(100)
+  servingUnit     String     @default("g")
+  source          String     @default("user") // user, api, system
+  mealItems       MealItem[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Meal {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  date        DateTime // YYYY-MM-DD
+  type        String // breakfast, lunch, dinner, snack
+  items       MealItem[]
+  photo       MealPhoto?
+  totalCalories Int?
+  totalProtein  Float?
+  totalCarbs    Float?
+  totalFat      Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MealItem {
+  id          String   @id @default(uuid())
+  mealId      String
+  meal        Meal     @relation(fields: [mealId], references: [id])
+  foodId      String
+  food        Food     @relation(fields: [foodId], references: [id])
+  quantity    Float    // multiplier of serving size
+  calories    Int      // calculated
+  protein     Float
+  carbs       Float
+  fat         Float
+}
+
+model MealPhoto {
+  id          String   @id @default(uuid())
+  mealId      String   @unique
+  meal        Meal     @relation(fields: [mealId], references: [id])
+  imageUrl    String
+  status      String   // uploaded, analyzed, confirmed
+  analysisRaw String?  // JSON string of AI analysis
+}
+
+model DailyActivity {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  date             DateTime
+  steps            Int      @default(0)
+  exerciseMinutes  Int      @default(0)
+  caloriesBurned   Int      @default(0)
+  sleepMinutes     Int      @default(0)
+  waterIntake      Int      @default(0) // in ml
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([userId, date])
+}
+
+model DailySummary {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  date             DateTime
+  caloriesConsumed Int      @default(0)
+  proteinConsumed  Float    @default(0)
+  carbsConsumed    Float    @default(0)
+  fatConsumed      Float    @default(0)
+  caloriesTarget   Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([userId, date])
+}
+
+model DeviceConnection {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  provider     String   // apple_health, google_fit
+  accessToken  String?
+  refreshToken String?
+  expiresAt    DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
