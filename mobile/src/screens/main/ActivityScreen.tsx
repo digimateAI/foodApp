@@ -4,39 +4,17 @@ import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-ico
 
 const ActivityScreen = () => {
 
-    const renderProgressRing = () => (
+    // Commented out fake renderProgressRing for now
+    /* const renderProgressRing = () => (
         <View style={styles.ringContainer}>
-            {/* Background Flame (Subtle) */}
-            <View style={styles.bgFlame}>
-                <Ionicons name="flame" size={120} color="#D4EDDA" style={{ opacity: 0.3 }} />
-            </View>
-
-            {/* Ring Simulation using Border Hacks or SVG. 
-                For simplicity in pure RN views without extra libs: 
-                We can use a View with borderRadius and border colors. 
-                However, creating a partial arc is hard with just Views.
-                We'll simulate a full ring for now or use a simple overlap trick.
-            */}
-            <View style={styles.outerRing}>
-                <View style={styles.innerRing}>
-                    <Ionicons name="flame" size={32} color="#33CC33" />
-                    <Text style={styles.ringValue}>450</Text>
-                    <Text style={styles.ringTotal}>/ 600 kcal</Text>
-                </View>
-            </View>
-            {/* Hacky partial green stroke */}
-            <View style={[styles.outerRing, styles.progressArc]} pointerEvents="none" />
-
-            {/* Daily Goal Bar */}
-            <View style={styles.goalBarContainer}>
-                <Text style={styles.goalLabel}>Daily Goal</Text>
-                <View style={styles.goalTrack}>
-                    <View style={[styles.goalFill, { width: '75%' }]} />
-                </View>
-                <Text style={styles.goalPercent}>75%</Text>
-            </View>
+             ...
         </View>
-    );
+    ); */
+
+    const getFormattedDate = () => {
+        const date = new Date();
+        return `Today, ${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}`;
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -52,72 +30,42 @@ const ActivityScreen = () => {
                 {/* 2. Date & Sync Status */}
                 <View style={styles.statusSection}>
                     <View>
-                        <Text style={styles.dateText}>Today, Oct 24</Text>
-                        <Text style={styles.syncText}>Last synced: 10:02 AM</Text>
+                        <Text style={styles.dateText}>{getFormattedDate()}</Text>
+                        <Text style={styles.syncText}>Last synced: Just now</Text>
                     </View>
-                    <View style={styles.deviceTag}>
+                    {/* Hiding Fake Device Tag */}
+                    {/* <View style={styles.deviceTag}>
                         <View style={styles.greenDot} />
                         <Text style={styles.deviceName}>Apple Health</Text>
-                    </View>
+                    </View> */}
                 </View>
 
-                {/* 3. Main Activity Goal Progress Ring */}
-                <View style={styles.mainCard}>
+                {/* Placeholder for Empty State since we have no real activity data yet */}
+                <View style={styles.emptyStateContainer}>
+                    <MaterialCommunityIcons name="chart-timeline-variant" size={64} color="#E0E0E0" />
+                    <Text style={styles.emptyStateText}>No activity data available yet.</Text>
+                    <Text style={styles.emptyStateSubtext}>Connect a device or start tracking to see your stats here.</Text>
+                </View>
+
+                {/* 3. Main Activity Goal Progress Ring - HIDDEN */}
+                {/* <View style={styles.mainCard}>
                     {renderProgressRing()}
-                </View>
+                </View> */}
 
-                {/* 4. Activity Summary Cards - Top Row */}
-                <View style={styles.cardsRow}>
-                    {/* Steps Card */}
+                {/* 4. Activity Summary Cards - Top Row - HIDDEN */}
+                {/* <View style={styles.cardsRow}>
                     <View style={[styles.infoCard, { marginRight: 8 }]}>
-                        <View style={styles.cardHeader}>
-                            <View style={[styles.iconBox, { backgroundColor: '#E6F0FF' }]}>
-                                <FontAwesome5 name="shoe-prints" size={14} color="#4A90E2" />
-                            </View>
-                            <View style={styles.percentTag}>
-                                <Text style={styles.percentText}>84%</Text>
-                            </View>
-                        </View>
-                        <Text style={styles.cardValue}>8,432</Text>
-                        <Text style={styles.cardLabel}>Steps</Text>
-                        <View style={styles.miniTrack}>
-                            <View style={[styles.miniFill, { backgroundColor: '#4A90E2', width: '84%' }]} />
-                        </View>
+                         ... Steps ...
                     </View>
-
-                    {/* Exercise Card */}
                     <View style={[styles.infoCard, { marginLeft: 8 }]}>
-                        <View style={styles.cardHeader}>
-                            <View style={[styles.iconBox, { backgroundColor: '#FFF5E6' }]}>
-                                <MaterialCommunityIcons name="dumbbell" size={18} color="#F5A623" />
-                            </View>
-                        </View>
-                        <Text style={styles.cardValue}>45</Text>
-                        <Text style={styles.cardLabel}>min Exercise</Text>
-                        <View style={styles.miniTrack}>
-                            <View style={[styles.miniFill, { backgroundColor: '#F5A623', width: '60%' }]} />
-                        </View>
+                         ... Exercise ...
                     </View>
-                </View>
+                </View> */}
 
-                {/* Sleep Duration Card (Full Width) */}
-                <View style={[styles.infoCard, { marginTop: 16 }]}>
-                    <View style={styles.sleepRow}>
-                        <View style={styles.sleepLeft}>
-                            <View style={[styles.iconBox, { backgroundColor: '#F3E5F5', marginBottom: 0, marginRight: 12 }]}>
-                                <Ionicons name="moon" size={16} color="#9B59B6" />
-                            </View>
-                            <View>
-                                <Text style={styles.cardValue}>7h 20m</Text>
-                                <Text style={styles.cardLabel}>Sleep Duration</Text>
-                            </View>
-                        </View>
-                        <View style={styles.sleepRight}>
-                            <Text style={styles.goodText}>Good</Text>
-                            <Text style={styles.qualityLabel}>Quality</Text>
-                        </View>
-                    </View>
-                </View>
+                {/* Sleep Duration Card (Full Width) - HIDDEN */}
+                {/* <View style={[styles.infoCard, { marginTop: 16 }]}>
+                     ...
+                </View> */}
 
                 {/* 5. Manage Connected Devices Button */}
                 <TouchableOpacity style={styles.manageButton}>
@@ -372,6 +320,25 @@ const styles = StyleSheet.create({
         color: '#808080',
         fontWeight: 'bold',
         fontSize: 14,
+    },
+    emptyStateContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 60,
+        paddingHorizontal: 40,
+    },
+    emptyStateText: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#808080',
+        marginTop: 16,
+        textAlign: 'center',
+    },
+    emptyStateSubtext: {
+        fontSize: 14,
+        color: '#B0B0B0',
+        marginTop: 8,
+        textAlign: 'center',
     },
 });
 

@@ -61,8 +61,8 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                             style={styles.avatar}
                         />
                     </View>
-                    <Text style={styles.userName}>{profile.name || 'Jane Doe'}</Text>
-                    <Text style={styles.userEmail}>{profile.name ? `${profile.name.toLowerCase().replace(/\s/g, '.')}@foodvision.app` : 'jane.doe@foodvision.app'}</Text>
+                    <Text style={styles.userName}>{profile.name}</Text>
+                    <Text style={styles.userEmail}>{profile.name ? `${profile.name.toLowerCase().replace(/\s/g, '.')}@foodvision.app` : ''}</Text>
 
                     <TouchableOpacity style={styles.editButton}>
                         <Text style={styles.editButtonText}>Edit Profile</Text>
@@ -96,10 +96,9 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                             </View>
                             <Text style={styles.deviceLabel}>Apple Health</Text>
                         </View>
-                        <View style={styles.statusTag}>
-                            <Text style={styles.statusText}>Connected</Text>
-                            <Ionicons name="checkmark" size={12} color="#33CC33" style={{ marginLeft: 4 }} />
-                        </View>
+                        <TouchableOpacity>
+                            <Text style={styles.connectLink}>Connect</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.divider} />
 

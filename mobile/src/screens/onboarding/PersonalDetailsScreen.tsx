@@ -11,7 +11,7 @@ const PersonalDetailsScreen = ({ navigation }: { navigation: any }) => {
     const [height, setHeight] = useState('0');
     const [weight, setWeight] = useState('0');
     const [heightUnit, setHeightUnit] = useState<'cm' | 'ft'>('cm');
-    const [weightUnit, setWeightUnit] = useState<'dy' | 'lb'>('lb');
+    const [weightUnit, setWeightUnit] = useState<'kg' | 'lb'>('lb');
 
     const isFormValid = name.trim().length > 0 && gender !== null && age.trim().length > 0 && height.trim().length > 0 && weight.trim().length > 0 && parseFloat(height) > 0 && parseFloat(weight) > 0;
 
@@ -45,151 +45,156 @@ const PersonalDetailsScreen = ({ navigation }: { navigation: any }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Ionicons name="chevron-back" size={24} color="#333" />
-                </TouchableOpacity>
-                <Text style={styles.headerTitle}>Personal Details</Text>
-                <View style={{ width: 24 }} />
-            </View>
-
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-                {/* Progress Indicator */}
-                <View style={styles.progressSection}>
-                    <View style={styles.progressLabels}>
-                        <Text style={styles.stepText}>Step 1 of 2</Text>
-                        {/* <Text style={styles.percentText}>50% Completed</Text> */}
-                    </View>
-                    <View style={styles.progressBarBg}>
-                        <View style={[styles.progressBarFill, { width: '50%' }]} />
-                    </View>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={{ flex: 1 }}
+            >
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                        <Ionicons name="chevron-back" size={24} color="#333" />
+                    </TouchableOpacity>
+                    <Text style={styles.headerTitle}>Personal Details</Text>
+                    <View style={{ width: 24 }} />
                 </View>
 
-                {/* Heading */}
-                <View style={styles.headingSection}>
-                    <Text style={styles.mainHeading}>Tell us about you</Text>
-                    <Text style={styles.descriptionText}>
-                        To tailor your nutrition plan effectively, we need to know a bit about your body metrics.
-                    </Text>
-                </View>
-
-                {/* Name Input */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>NAME</Text>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            value={name}
-                            onChangeText={setName}
-                            placeholder="Enter your name"
-                            placeholderTextColor="#ccc"
-                        />
-                    </View>
-                </View>
-
-                {/* Gender Selection */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>GENDER</Text>
-                    <View style={styles.genderContainer}>
-                        {renderGenderCard('female', 'Female', 'gender-female')}
-                        {renderGenderCard('male', 'Male', 'gender-male')}
-                        {renderGenderCard('other', 'Other', 'gender-transgender')}
-                    </View>
-                </View>
-
-                {/* Age Input */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>AGE</Text>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            value={age}
-                            onChangeText={setAge}
-                            keyboardType="numeric"
-                            maxLength={3}
-                        />
-                        <Text style={styles.unitLabel}>years</Text>
-                    </View>
-                </View>
-
-                {/* Height Input */}
-                <View style={styles.section}>
-                    <View style={styles.sectionHeader}>
-                        <Text style={styles.sectionTitle}>HEIGHT</Text>
-                        {/* Unit Toggle */}
-                        <View style={styles.unitToggle}>
-                            <TouchableOpacity
-                                style={[styles.toggleSegment, heightUnit === 'ft' && styles.toggleSegmentSelected]}
-                                onPress={() => setHeightUnit('ft')}
-                            >
-                                <Text style={[styles.toggleText, heightUnit === 'ft' && styles.toggleTextSelected]}>ft/in</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.toggleSegment, heightUnit === 'cm' && styles.toggleSegmentSelected]}
-                                onPress={() => setHeightUnit('cm')}
-                            >
-                                <Text style={[styles.toggleText, heightUnit === 'cm' && styles.toggleTextSelected]}>cm</Text>
-                            </TouchableOpacity>
+                <ScrollView contentContainerStyle={styles.scrollContent}>
+                    {/* Progress Indicator */}
+                    <View style={styles.progressSection}>
+                        <View style={styles.progressLabels}>
+                            <Text style={styles.stepText}>Step 1 of 2</Text>
+                            {/* <Text style={styles.percentText}>50% Completed</Text> */}
+                        </View>
+                        <View style={styles.progressBarBg}>
+                            <View style={[styles.progressBarFill, { width: '50%' }]} />
                         </View>
                     </View>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            value={height}
-                            onChangeText={setHeight}
-                            keyboardType="numeric"
-                        />
-                        <Text style={styles.unitLabel}>{heightUnit}</Text>
-                    </View>
-                </View>
 
-                {/* Weight Input */}
-                <View style={styles.section}>
-                    <View style={styles.sectionHeader}>
-                        <Text style={styles.sectionTitle}>WEIGHT</Text>
-                        {/* Unit Toggle */}
-                        <View style={styles.unitToggle}>
-                            <TouchableOpacity
-                                style={[styles.toggleSegment, weightUnit === 'kg' && styles.toggleSegmentSelected]}
-                                onPress={() => setWeightUnit('kg')}
-                            >
-                                <Text style={[styles.toggleText, weightUnit === 'kg' && styles.toggleTextSelected]}>kg</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.toggleSegment, weightUnit === 'lb' && styles.toggleSegmentSelectedGreen]}
-                                onPress={() => setWeightUnit('lb')}
-                            >
-                                <Text style={[styles.toggleText, weightUnit === 'lb' && styles.toggleTextSelectedWhite]}>lb</Text>
-                            </TouchableOpacity>
+                    {/* Heading */}
+                    <View style={styles.headingSection}>
+                        <Text style={styles.mainHeading}>Tell us about you</Text>
+                        <Text style={styles.descriptionText}>
+                            To tailor your nutrition plan effectively, we need to know a bit about your body metrics.
+                        </Text>
+                    </View>
+
+                    {/* Name Input */}
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>NAME</Text>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                value={name}
+                                onChangeText={setName}
+                                placeholder="Enter your name"
+                                placeholderTextColor="#ccc"
+                            />
                         </View>
                     </View>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            value={weight}
-                            onChangeText={setWeight}
-                            keyboardType="numeric"
-                        />
-                        <Text style={styles.unitLabel}>{weightUnit}</Text>
+
+                    {/* Gender Selection */}
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>GENDER</Text>
+                        <View style={styles.genderContainer}>
+                            {renderGenderCard('female', 'Female', 'gender-female')}
+                            {renderGenderCard('male', 'Male', 'gender-male')}
+                            {renderGenderCard('other', 'Other', 'gender-transgender')}
+                        </View>
                     </View>
+
+                    {/* Age Input */}
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>AGE</Text>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                value={age}
+                                onChangeText={setAge}
+                                keyboardType="numeric"
+                                maxLength={3}
+                            />
+                            <Text style={styles.unitLabel}>years</Text>
+                        </View>
+                    </View>
+
+                    {/* Height Input */}
+                    <View style={styles.section}>
+                        <View style={styles.sectionHeader}>
+                            <Text style={styles.sectionTitle}>HEIGHT</Text>
+                            {/* Unit Toggle */}
+                            <View style={styles.unitToggle}>
+                                <TouchableOpacity
+                                    style={[styles.toggleSegment, heightUnit === 'ft' && styles.toggleSegmentSelected]}
+                                    onPress={() => setHeightUnit('ft')}
+                                >
+                                    <Text style={[styles.toggleText, heightUnit === 'ft' && styles.toggleTextSelected]}>ft/in</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[styles.toggleSegment, heightUnit === 'cm' && styles.toggleSegmentSelected]}
+                                    onPress={() => setHeightUnit('cm')}
+                                >
+                                    <Text style={[styles.toggleText, heightUnit === 'cm' && styles.toggleTextSelected]}>cm</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                value={height}
+                                onChangeText={setHeight}
+                                keyboardType="numeric"
+                            />
+                            <Text style={styles.unitLabel}>{heightUnit}</Text>
+                        </View>
+                    </View>
+
+                    {/* Weight Input */}
+                    <View style={styles.section}>
+                        <View style={styles.sectionHeader}>
+                            <Text style={styles.sectionTitle}>WEIGHT</Text>
+                            {/* Unit Toggle */}
+                            <View style={styles.unitToggle}>
+                                <TouchableOpacity
+                                    style={[styles.toggleSegment, weightUnit === 'kg' && styles.toggleSegmentSelected]}
+                                    onPress={() => setWeightUnit('kg')}
+                                >
+                                    <Text style={[styles.toggleText, weightUnit === 'kg' && styles.toggleTextSelected]}>kg</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[styles.toggleSegment, weightUnit === 'lb' && styles.toggleSegmentSelectedGreen]}
+                                    onPress={() => setWeightUnit('lb')}
+                                >
+                                    <Text style={[styles.toggleText, weightUnit === 'lb' && styles.toggleTextSelectedWhite]}>lb</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                value={weight}
+                                onChangeText={setWeight}
+                                keyboardType="numeric"
+                            />
+                            <Text style={styles.unitLabel}>{weightUnit}</Text>
+                        </View>
+                    </View>
+
+                    <View style={{ height: 100 }} />
+                </ScrollView>
+
+                <View style={styles.footer}>
+                    <TouchableOpacity
+                        style={[styles.nextButton, !isFormValid && { backgroundColor: '#CCCCCC', opacity: 0.7 }]}
+                        disabled={!isFormValid}
+                        onPress={() => {
+                            updateProfile({ name, gender: gender || 'female', age, height, weight });
+                            navigation.navigate('ActivityGoal');
+                        }}
+                    >
+                        <Text style={styles.nextButtonText}>Next Step</Text>
+                        <Ionicons name="arrow-forward" size={20} color="#fff" style={{ marginLeft: 8 }} />
+                    </TouchableOpacity>
                 </View>
-
-                <View style={{ height: 100 }} />
-            </ScrollView>
-
-            <View style={styles.footer}>
-                <TouchableOpacity
-                    style={[styles.nextButton, !isFormValid && { backgroundColor: '#CCCCCC', opacity: 0.7 }]}
-                    disabled={!isFormValid}
-                    onPress={() => {
-                        updateProfile({ name, gender: gender || 'female', age, height, weight });
-                        navigation.navigate('ActivityGoal');
-                    }}
-                >
-                    <Text style={styles.nextButtonText}>Next Step</Text>
-                    <Ionicons name="arrow-forward" size={20} color="#fff" style={{ marginLeft: 8 }} />
-                </TouchableOpacity>
-            </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 };

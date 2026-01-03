@@ -58,7 +58,7 @@ const FoodScreen = ({ navigation }: { navigation: any }) => {
             {mealData && mealData.length > 0 ?
                 mealData.map((meal: Meal) => (
                     <View key={meal.id} style={{ marginBottom: 12 }}>
-                        {renderLoggedMeal(meal.name, `${meal.calories} kcal`, meal.imageUri || 'https://via.placeholder.com/150', { p: meal.protein, c: meal.carbs, f: meal.fat })}
+                        {renderLoggedMeal(meal.name, `${meal.calories} kcal`, meal.imageUri || '', { p: meal.protein, c: meal.carbs, f: meal.fat })}
                     </View>
                 ))
                 :
@@ -67,6 +67,11 @@ const FoodScreen = ({ navigation }: { navigation: any }) => {
         </View>
     );
 
+    const getFormattedDate = () => {
+        const date = new Date();
+        return `Today, ${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}`;
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             {/* 1. Top Day Selector */}
@@ -74,7 +79,7 @@ const FoodScreen = ({ navigation }: { navigation: any }) => {
                 <TouchableOpacity style={styles.arrowButton}>
                     <Ionicons name="chevron-back" size={24} color="#333" />
                 </TouchableOpacity>
-                <Text style={styles.dateText}>Today, Oct 24</Text>
+                <Text style={styles.dateText}>{getFormattedDate()}</Text>
                 <TouchableOpacity style={styles.arrowButton}>
                     <Ionicons name="chevron-forward" size={24} color="#333" />
                 </TouchableOpacity>

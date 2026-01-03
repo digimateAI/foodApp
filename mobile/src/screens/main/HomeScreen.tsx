@@ -30,6 +30,13 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         </TouchableOpacity>
     );
 
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return 'Good Morning,';
+        if (hour < 16) return 'Good Afternoon,';
+        return 'Good Evening,';
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -44,8 +51,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             />
                         </View>
                         <View style={styles.greetingContainer}>
-                            <Text style={styles.greetingSmall}>Good Morning,</Text>
-                            <Text style={styles.greetingName}>{profile.name || 'Alex'}</Text>
+                            <Text style={styles.greetingSmall}>{getGreeting()}</Text>
+                            <Text style={styles.greetingName}>{profile.name}</Text>
                         </View>
                     </View>
                     <TouchableOpacity style={styles.notificationButton}>
@@ -89,8 +96,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
                 {/* 3. Sleep & Activity Cards */}
                 <View style={styles.statsRow}>
-                    {/* Sleep Card */}
-                    <TouchableOpacity style={[styles.statCard, { marginRight: 8 }]}>
+                    {/* Sleep Card - Commented out static data */}
+                    {/* <TouchableOpacity style={[styles.statCard, { marginRight: 8 }]}>
                         <View style={styles.statHeader}>
                             <View style={styles.statIconContainer}>
                                 <Ionicons name="moon" size={18} color="#9B59B6" />
@@ -101,10 +108,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                         </View>
                         <Text style={styles.statLabel}>Sleep Duration</Text>
                         <Text style={styles.statValue}>7h 12m</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
-                    {/* Active Burn Card */}
-                    <TouchableOpacity style={[styles.statCard, { marginLeft: 8 }]}>
+                    {/* Active Burn Card - Commented out static steps */}
+                    {/* <TouchableOpacity style={[styles.statCard, { marginLeft: 8 }]}>
                         <View style={styles.statHeader}>
                             <View style={styles.statIconContainer}>
                                 <MaterialCommunityIcons name="fire" size={20} color="#F57C00" />
@@ -117,7 +124,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             <Ionicons name="footsteps" size={12} color="#56AB2F" />
                             <Text style={styles.stepsText}>8,432 steps</Text>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
 
                 {/* 4. Recent Meals */}
@@ -148,6 +155,32 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     </TouchableOpacity>
                 </ScrollView>
 
+                {/* 5. Water Tracker */}
+                <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionTitle}>Water Intake</Text>
+                    <Text style={styles.viewAllText}>{dailyLog.waterIntake} / {profile.waterTarget} ml</Text>
+                </View>
+
+                <View style={styles.waterContainer}>
+                    <View style={styles.waterProgress}>
+                        <View style={[styles.waterFill, { width: `${Math.min((dailyLog.waterIntake / profile.waterTarget) * 100, 100)}%` }]} />
+                    </View>
+                    <View style={styles.waterButtons}>
+                        <TouchableOpacity style={styles.waterBtn} onPress={() => useUserStore.getState().addWater(200)}>
+                            <Ionicons name="water-outline" size={20} color="#4A90E2" />
+                            <Text style={styles.waterBtnText}>+200ml</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.waterBtn} onPress={() => useUserStore.getState().addWater(500)}>
+                            <MaterialCommunityIcons name="bottle-soda-classic-outline" size={20} color="#4A90E2" />
+                            <Text style={styles.waterBtnText}>+500ml</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.waterBtn} onPress={() => useUserStore.getState().addWater(1000)}>
+                            <MaterialCommunityIcons name="bottle-wine-outline" size={20} color="#4A90E2" />
+                            <Text style={styles.waterBtnText}>+1L</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
                 <View style={{ height: 100 }} />
             </ScrollView>
 
@@ -159,7 +192,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                 <Ionicons name="camera" size={24} color="#FFF" style={styles.fabIcon} />
                 <Text style={styles.fabText}>Log Meal</Text>
             </TouchableOpacity>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };
 
@@ -476,6 +509,50 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    waterContainer: {
+        backgroundColor: '#fff',
+        marginHorizontal: 16,
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 24,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 3,
+        elevation: 1,
+    },
+    waterProgress: {
+        height: 12,
+        backgroundColor: '#E1E9F4',
+        borderRadius: 6,
+        overflow: 'hidden',
+        marginBottom: 16,
+    },
+    waterFill: {
+        height: '100%',
+        backgroundColor: '#4A90E2',
+        borderRadius: 6,
+    },
+    waterButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 8,
+    },
+    waterBtn: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#F0F8FF',
+        paddingVertical: 10,
+        borderRadius: 12,
+        gap: 4,
+    },
+    waterBtnText: {
+        fontSize: 12,
+        fontWeight: '600',
+        color: '#4A90E2',
     },
 });
 

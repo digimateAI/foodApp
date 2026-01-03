@@ -107,11 +107,17 @@ export default function CameraScreen({ route, navigation }: any) {
                     setIsAnalyzing(false);
 
                     Alert.alert(
-                        "Food Analyzed!",
-                        `Identified: ${mealName}\nCalories: ${calories} kcal`,
+                        "Item Logged!",
+                        `Identified: ${mealName}\nCalories: ${calories} kcal\n\nIs there any other food you have eaten?`,
                         [
                             {
-                                text: "Add to Diary",
+                                text: "Yes, Add More",
+                                onPress: () => {
+                                    // Stay on screen to log next item
+                                }
+                            },
+                            {
+                                text: "No, Finish",
                                 onPress: () => {
                                     navigation.navigate('Food');
                                 }

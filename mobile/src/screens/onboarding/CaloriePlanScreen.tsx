@@ -4,8 +4,8 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useUserStore } from '../../store/useUserStore';
 
 const CaloriePlanScreen = ({ navigation }: { navigation: any }) => {
-    const { profile, login } = useUserStore();
-    const { dailyCalorieTarget, proteinTarget, carbTarget, fatTarget, bmr, tdee } = profile;
+    const { profile, finishOnboarding } = useUserStore();
+    const { dailyCalorieTarget, proteinTarget, carbTarget, fatTarget, bmr, tdee, bmi, bmiStatus } = profile;
 
     // Dynamic Macros based on user profile
     const macros = [
@@ -58,9 +58,19 @@ const CaloriePlanScreen = ({ navigation }: { navigation: any }) => {
         },
     ];
 
+    const getBmiColor = (status: string) => {
+        switch (status) {
+            case 'Underweight': return '#4A90E2'; // Blue
+            case 'Normal': return '#28A745'; // Green
+            case 'Overweight': return '#F5A623'; // Orange
+            case 'Obese': return '#DC3545'; // Red
+            default: return '#666';
+        }
+    };
+
     const handleStartTracking = () => {
         // Complete Onboarding
-        login(); // Sets isAuthenticated = true
+        finishOnboarding();
         // Note: The AppNavigator listens to 'isAuthenticated' in the store and will automatically switch to MainTabs
     };
 
@@ -95,15 +105,30 @@ const CaloriePlanScreen = ({ navigation }: { navigation: any }) => {
                     <Ionicons name="chevron-back" size={24} color="#333" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Your Plan</Text>
-                <TouchableOpacity style={styles.backButton}>
-                    <MaterialCommunityIcons name="pencil-outline" size={24} color="#333" />
-                </TouchableOpacity>
+                <View style={{ width: 32 }} />
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <Text style={styles.explanationText}>
                     Based on your age, height, weight, activity and goal.
                 </Text>
+
+                {/* BMI Result Card */}
+                <View style={styles.bmiCard}>
+                    <View style={styles.bmiHeader}>
+                        <MaterialCommunityIcons name="human-male-height" size={24} color="#333" />
+                        <Text style={styles.bmiTitle}>Your BMI Score</Text>
+                    </View>
+                    <View style={styles.bmiValueContainer}>
+                        <Text style={styles.bmiValue}>{bmi}</Text>
+                        <View style={[styles.bmiStatusTag, { backgroundColor: getBmiColor(bmiStatus) }]}>
+                            <Text style={styles.bmiStatusText}>{bmiStatus}</Text>
+                        </View>
+                    </View>
+                    <Text style={styles.bmiDescription}>
+                        Based on your body metrics, you are considered <Text style={{ fontWeight: '700', color: getBmiColor(bmiStatus) }}>{bmiStatus}</Text>.
+                    </Text>
+                </View>
 
                 {/* Daily Target Display */}
                 <View style={styles.targetContainer}>
@@ -150,7 +175,6 @@ const CaloriePlanScreen = ({ navigation }: { navigation: any }) => {
                     {/* Placeholder Pie Chart */}
                     <View style={styles.pieChartPlaceholder}>
                         <MaterialCommunityIcons name="chart-pie" size={32} color="#33CC33" />
-                        <MaterialCommunityIcons name="crosshairs" size={12} color="#999" style={{ position: 'absolute' }} />
                     </View>
                 </View>
 
@@ -193,10 +217,58 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     explanationText: {
-        color: '#56AB2F',
+        color: '#666', // Reduced visual weight
         fontSize: 14,
-        marginBottom: 24,
+        marginBottom: 20,
         marginTop: 4,
+    },
+    bmiCard: {
+        backgroundColor: '#fff',
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 24,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    bmiHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 12,
+    },
+    bmiTitle: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: '#333',
+    },
+    bmiValueContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+        marginBottom: 8,
+    },
+    bmiValue: {
+        fontSize: 36,
+        fontWeight: '800',
+        color: '#1A1A1A',
+    },
+    bmiStatusTag: {
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 20,
+    },
+    bmiStatusText: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: '700',
+    },
+    bmiDescription: {
+        fontSize: 14,
+        color: '#666',
+        lineHeight: 20,
     },
     targetContainer: {
         alignItems: 'center',
