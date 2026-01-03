@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
+import { db, bucket } from '../config/firebase';
 
 const prisma = new PrismaClient();
 
@@ -143,9 +144,13 @@ export const analyzeFood = async (req: Request | any, res: Response) => {
             ]
         };
 
+        // -------------------------
+
+        console.time('Gemini Analysis');
         const response = await axios.post(url, payload, {
             headers: { 'Content-Type': 'application/json' }
         });
+        console.timeEnd('Gemini Analysis');
 
         const candidates = response.data.candidates;
         if (!candidates || candidates.length === 0) {
@@ -155,6 +160,55 @@ export const analyzeFood = async (req: Request | any, res: Response) => {
         const rawText = candidates[0].content.parts[0].text;
         const jsonStr = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
         const data = JSON.parse(jsonStr);
+
+        const validItems = data.items.map((i: any) => ({
+            ...i,
+            calories: Number(i.calories) || 0,
+            protein_g: Number(i.protein_g) || 0,
+            carbs_g: Number(i.carbs_g) || 0,
+            fat_g: Number(i.fat_g) || 0
+        }));
+
+        // --- Save to Firebase Storage ---
+        const timestamp = Date.now();
+        const filename = `food_${timestamp}.jpg`;
+        const file = bucket.file(filename);
+
+        console.time('Storage Upload');
+        await file.save(req.file.buffer, {
+            contentType: req.file.mimetype,
+            metadata: {
+                contentType: req.file.mimetype
+            }
+        });
+
+        // Make the file public
+        await file.makePublic();
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+
+        console.log('Image uploaded to:', publicUrl);
+        console.timeEnd('Storage Upload');
+        // ---------------------------
+
+        // --- Save to Firestore (Admin SDK) ---
+        try {
+            console.time('Firestore Save');
+
+            // Note: Admin SDK handles types automatically!
+            const docRef = await db.collection('food_details').add({
+                timestamp: new Date().toISOString(),
+                image_url: publicUrl,
+                ...data, // spread the gemini response
+                items: validItems // overwrite items with cleaned numbers
+            });
+
+            console.log('Successfully saved to Firestore with ID:', docRef.id);
+            console.timeEnd('Firestore Save');
+
+        } catch (firestoreError: any) {
+            console.error('Failed to save to Firestore:', firestoreError.message);
+        }
+        // -------------------------
 
         res.json(data);
 
