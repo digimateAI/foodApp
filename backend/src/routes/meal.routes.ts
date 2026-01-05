@@ -7,7 +7,7 @@ const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.get('/', authenticate, getMeals);
-router.post('/', authenticate, logMeal);
+router.post('/', upload.single('image'), logMeal);
 router.get('/foods/search', authenticate, searchFood);
 router.post('/analyze', upload.single('image'), analyzeFood);
 
