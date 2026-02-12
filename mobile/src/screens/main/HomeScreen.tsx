@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { useUserStore } from '../../store/useUserStore';
@@ -6,7 +6,12 @@ import { useUserStore } from '../../store/useUserStore';
 const { width } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
-    const { profile, dailyLog } = useUserStore();
+    const { profile, dailyLog, fetchDailyLog } = useUserStore();
+
+    useEffect(() => {
+        fetchDailyLog();
+    }, []);
+
     const { dailyCalorieTarget, proteinTarget, carbTarget, fatTarget } = profile;
     const { consumedCalories, consumedProtein, consumedCarbs, consumedFat, meals } = dailyLog;
 
@@ -55,7 +60,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                             <Text style={styles.greetingName}>{profile.name}</Text>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.notificationButton}>
+                    <TouchableOpacity
+                        style={styles.notificationButton}
+                        onPress={() => navigation.navigate('Notifications')}
+                    >
                         <Ionicons name="notifications-outline" size={24} color="#333" />
                         <View style={styles.notificationBadge} />
                     </TouchableOpacity>
@@ -65,7 +73,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                 <View style={styles.calorieCard}>
                     <View style={styles.cardHeader}>
                         <Text style={styles.cardTitle}>Today's Calories</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate('Food')}>
                             <Text style={styles.detailsLink}>Details</Text>
                         </TouchableOpacity>
                     </View>
@@ -130,7 +138,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                 {/* 4. Recent Meals */}
                 <View style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>Recent Meals</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Food')}>
                         <Text style={styles.viewAllText}>View all</Text>
                     </TouchableOpacity>
                 </View>
@@ -147,7 +155,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     )}
 
                     {/* Add Snack Card */}
-                    <TouchableOpacity style={styles.addSnackCard}>
+                    <TouchableOpacity
+                        style={styles.addSnackCard}
+                        onPress={() => navigation.navigate('Camera', { mealType: 'Snack' })}
+                    >
                         <View style={styles.addSnackCircle}>
                             <Ionicons name="add" size={24} color="#808080" />
                         </View>
@@ -169,6 +180,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                         <TouchableOpacity style={styles.waterBtn} onPress={() => useUserStore.getState().addWater(200)}>
                             <Ionicons name="water-outline" size={20} color="#4A90E2" />
                             <Text style={styles.waterBtnText}>+200ml</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.waterBtn} onPress={() => useUserStore.getState().addWater(-200)}>
+                            <Ionicons name="remove-circle-outline" size={20} color="#FF4D4D" />
+                            <Text style={[styles.waterBtnText, { color: '#FF4D4D' }]}>-200</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.waterBtn} onPress={() => useUserStore.getState().addWater(500)}>
                             <MaterialCommunityIcons name="bottle-soda-classic-outline" size={20} color="#4A90E2" />

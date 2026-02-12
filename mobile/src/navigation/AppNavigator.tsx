@@ -15,6 +15,7 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import PersonalDetailsScreen from '../screens/onboarding/PersonalDetailsScreen';
 import ActivityGoalScreen from '../screens/onboarding/ActivityGoalScreen';
 import CaloriePlanScreen from '../screens/onboarding/CaloriePlanScreen';
+import NotificationsScreen from '../screens/main/NotificationsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,7 +44,7 @@ function MainTabs() {
                     fontWeight: '600',
                 },
                 tabBarIcon: ({ focused, color, size }) => {
-                    let iconName;
+                    let iconName: any;
 
                     if (route.name === 'Home') {
                         iconName = focused ? 'home' : 'home-outline';
@@ -91,6 +92,8 @@ export default function AppNavigator() {
                         <Stack.Screen name="LogMeal" component={LogMealScreen} />
                         <Stack.Screen name="LogMealMethod" component={LogMealMethodScreen} />
                         <Stack.Screen name="Camera" component={CameraScreen} />
+                        <Stack.Screen name="Notifications" component={NotificationsScreen} />
+                        <Stack.Screen name="PersonalDetails" component={PersonalDetailsScreen} />
                     </>
                 ) : (
                     <Stack.Screen name="Auth" component={AuthStack} />

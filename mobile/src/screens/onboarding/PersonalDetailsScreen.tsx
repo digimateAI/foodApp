@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, SafeAreaView, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useUserStore } from '../../store/useUserStore';
 
-const PersonalDetailsScreen = ({ navigation }: { navigation: any }) => {
-    const { updateProfile } = useUserStore();
-    const [name, setName] = useState('');
-    const [gender, setGender] = useState<'male' | 'female' | 'other' | null>(null);
-    const [age, setAge] = useState('25');
-    const [height, setHeight] = useState('0');
-    const [weight, setWeight] = useState('0');
-    const [heightUnit, setHeightUnit] = useState<'cm' | 'ft'>('cm');
-    const [weightUnit, setWeightUnit] = useState<'kg' | 'lb'>('lb');
+const PersonalDetailsScreen = ({ navigation, route }: { navigation: any, route: any }) => {
+    const { updateProfile, setUser, profile } = useUserStore();
+    const isEditMode = route.params?.mode === 'edit';
 
-    const isFormValid = name.trim().length > 0 && gender !== null && age.trim().length > 0 && height.trim().length > 0 && weight.trim().length > 0 && parseFloat(height) > 0 && parseFloat(weight) > 0;
+    // Initialize state (pre-fill if Edit Mode)
+    const [name, setName] = useState(isEditMode ? profile.name : '');
+    const [email, setEmail] = useState(isEditMode ? 'user@example.com' : ''); // Email usually read-only or from auth
+    const [gender, setGender] = useState<'male' | 'female' | 'other' | null>(isEditMode ? profile.gender : null);
+    const [age, setAge] = useState(isEditMode ? profile.age : '25');
+    const [height, setHeight] = useState(isEditMode ? profile.height : '0');
+    const [weight, setWeight] = useState(isEditMode ? profile.weight : '0');
+
+    const [heightUnit, setHeightUnit] = useState<'cm' | 'ft'>('cm');
+    const [weightUnit, setWeightUnit] = useState<'kg' | 'lb'>('kg'); // Default to KG for consistency
+
+    const isFormValid = name.trim().length > 0 && (isEditMode || email.trim().length > 0) && gender !== null && age.trim().length > 0 && height.trim().length > 0 && weight.trim().length > 0 && parseFloat(height) > 0 && parseFloat(weight) > 0;
 
     // Helpers to render Gender Cards
     const renderGenderCard = (type: 'male' | 'female' | 'other', label: string, iconName: any) => {
@@ -53,27 +59,28 @@ const PersonalDetailsScreen = ({ navigation }: { navigation: any }) => {
                     <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                         <Ionicons name="chevron-back" size={24} color="#333" />
                     </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Personal Details</Text>
+                    <Text style={styles.headerTitle}>{isEditMode ? 'Edit Profile' : 'Personal Details'}</Text>
                     <View style={{ width: 24 }} />
                 </View>
 
                 <ScrollView contentContainerStyle={styles.scrollContent}>
-                    {/* Progress Indicator */}
-                    <View style={styles.progressSection}>
-                        <View style={styles.progressLabels}>
-                            <Text style={styles.stepText}>Step 1 of 2</Text>
-                            {/* <Text style={styles.percentText}>50% Completed</Text> */}
+                    {/* Progress Indicator - HIDE IN EDIT MODE */}
+                    {!isEditMode && (
+                        <View style={styles.progressSection}>
+                            <View style={styles.progressLabels}>
+                                <Text style={styles.stepText}>Step 1 of 2</Text>
+                            </View>
+                            <View style={styles.progressBarBg}>
+                                <View style={[styles.progressBarFill, { width: '50%' }]} />
+                            </View>
                         </View>
-                        <View style={styles.progressBarBg}>
-                            <View style={[styles.progressBarFill, { width: '50%' }]} />
-                        </View>
-                    </View>
+                    )}
 
                     {/* Heading */}
                     <View style={styles.headingSection}>
-                        <Text style={styles.mainHeading}>Tell us about you</Text>
+                        <Text style={styles.mainHeading}>{isEditMode ? 'Update Details' : 'Tell us about you'}</Text>
                         <Text style={styles.descriptionText}>
-                            To tailor your nutrition plan effectively, we need to know a bit about your body metrics.
+                            {isEditMode ? 'Update your personal information to keep your nutrition plan accurate.' : 'To tailor your nutrition plan effectively, we need to know your details.'}
                         </Text>
                     </View>
 
@@ -90,6 +97,24 @@ const PersonalDetailsScreen = ({ navigation }: { navigation: any }) => {
                             />
                         </View>
                     </View>
+
+                    {/* Email Input - Editable only in onboarding for now */}
+                    {!isEditMode && (
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>EMAIL</Text>
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    value={email}
+                                    onChangeText={setEmail}
+                                    placeholder="Enter your email"
+                                    placeholderTextColor="#ccc"
+                                    keyboardType="email-address"
+                                    autoCapitalize="none"
+                                />
+                            </View>
+                        </View>
+                    )}
 
                     {/* Gender Selection */}
                     <View style={styles.section}>
@@ -186,12 +211,32 @@ const PersonalDetailsScreen = ({ navigation }: { navigation: any }) => {
                         style={[styles.nextButton, !isFormValid && { backgroundColor: '#CCCCCC', opacity: 0.7 }]}
                         disabled={!isFormValid}
                         onPress={() => {
+                            // Save profile data
                             updateProfile({ name, gender: gender || 'female', age, height, weight });
-                            navigation.navigate('ActivityGoal');
+
+                            if (isEditMode) {
+                                // EDIT MODE: Save and Exit
+                                navigation.goBack();
+                            } else {
+                                // ONBOARDING MODE: Next Step
+                                setUser({
+                                    uid: `manual-${Date.now()}`,
+                                    name: name,
+                                    email: email,
+                                    photoUrl: undefined
+                                });
+                                navigation.navigate('ActivityGoal');
+                            }
                         }}
                     >
-                        <Text style={styles.nextButtonText}>Next Step</Text>
-                        <Ionicons name="arrow-forward" size={20} color="#fff" style={{ marginLeft: 8 }} />
+                        {isEditMode ? (
+                            <Text style={styles.nextButtonText}>Save Changes</Text>
+                        ) : (
+                            <>
+                                <Text style={styles.nextButtonText}>Next Step</Text>
+                                <Ionicons name="arrow-forward" size={20} color="#fff" style={{ marginLeft: 8 }} />
+                            </>
+                        )}
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>

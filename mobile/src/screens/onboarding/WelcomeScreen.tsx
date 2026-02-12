@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { useUserStore } from '../../store/useUserStore';
@@ -66,7 +67,10 @@ const WelcomeScreen = ({ navigation }: { navigation: any }) => {
                         {/* Placeholder Icon for Apple */}
                         <Text style={styles.socialButtonText}> Apple</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.socialButton}>
+                    <TouchableOpacity
+                        style={styles.socialButton}
+                        onPress={() => navigation.navigate('Auth', { screen: 'Login' })}
+                    >
                         {/* Placeholder Icon for Google */}
                         <Text style={styles.socialButtonText}>Google</Text>
                     </TouchableOpacity>

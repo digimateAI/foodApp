@@ -159,7 +159,7 @@ const CaloriePlanScreen = ({ navigation }: { navigation: any }) => {
                     {scienceMetrics.map((item) => (
                         <View key={item.id} style={styles.scienceCard}>
                             <View style={styles.scienceIconRow}>
-                                <MaterialCommunityIcons name={item.icon} size={24} color={item.color} />
+                                <MaterialCommunityIcons name={item.icon as any} size={24} color={item.color} />
                             </View>
                             <Text style={styles.scienceValue}>{item.value}</Text>
                             <Text style={styles.scienceLabel}>{item.label}</Text>

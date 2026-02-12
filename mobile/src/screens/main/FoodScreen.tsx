@@ -1,20 +1,59 @@
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useUserStore, Meal } from '../../store/useUserStore';
 
 const { width } = Dimensions.get('window');
 
 const FoodScreen = ({ navigation }: { navigation: any }) => {
-    const { dailyLog, profile } = useUserStore();
-    const { consumedCalories, consumedProtein, consumedCarbs, consumedFat, meals } = dailyLog;
+    // 1. Get History from Store
+    const { dailyLog, profile, history } = useUserStore();
     const { dailyCalorieTarget, proteinTarget, carbTarget, fatTarget } = profile;
+
+    // 2. Local State for Date Navigation
+    const [selectedDate, setSelectedDate] = React.useState(new Date());
+
+    // 3. Helper to get date string key (YYYY-MM-DD)
+    const getDateKey = (date: Date) => date.toISOString().split('T')[0];
+
+    // 4. Determine Data to Display
+    // If selected date is today, show live 'dailyLog'. Else show historical log or empty default.
+    const isToday = getDateKey(selectedDate) === getDateKey(new Date());
+
+    // Fallback empty log
+    const emptyLog = {
+        consumedCalories: 0,
+        consumedProtein: 0,
+        consumedCarbs: 0,
+        consumedFat: 0,
+        meals: [],
+    };
+
+    const displayLog = isToday
+        ? dailyLog
+        : (history && history[getDateKey(selectedDate)]) || emptyLog; // Handle missing history safely
+
+    const { consumedCalories, consumedProtein, consumedCarbs, consumedFat, meals } = displayLog;
+
+    // Navigation Handlers
+    const goToPreviousDay = () => {
+        const prev = new Date(selectedDate);
+        prev.setDate(prev.getDate() - 1);
+        setSelectedDate(prev);
+    };
+
+    const goToNextDay = () => {
+        const next = new Date(selectedDate);
+        next.setDate(next.getDate() + 1);
+        // Optional: Prevent going into future? For now, allow it (future is empty)
+        setSelectedDate(next);
+    };
 
     const renderMacroProgress = (label: string, filled: number, total: number, color: string) => (
         <View style={styles.macroProgressItem}>
             <Text style={styles.miniMacroLabel}>{label}</Text>
             <View style={styles.miniMacroTrack}>
-                <View style={[styles.miniMacroFill, { backgroundColor: color, width: `${(filled / total) * 100}%` }]} />
+                <View style={[styles.miniMacroFill, { backgroundColor: color, width: `${total > 0 ? Math.min((filled / total) * 100, 100) : 0}%` }]} />
             </View>
             <Text style={styles.miniMacroValue}>{filled}/{total}g</Text>
         </View>
@@ -62,25 +101,28 @@ const FoodScreen = ({ navigation }: { navigation: any }) => {
                     </View>
                 ))
                 :
-                renderUnloggedMeal(`Log your ${title.toLowerCase()}`)
+                // Only show "Add" button if it is TODAY. Past/Future days shouldn't prompt to add (usually).
+                isToday ? renderUnloggedMeal(`Log your ${title.toLowerCase()}`) : <Text style={{ marginHorizontal: 16, color: '#999', fontStyle: 'italic' }}>No entry</Text>
             }
         </View>
     );
 
     const getFormattedDate = () => {
-        const date = new Date();
-        return `Today, ${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}`;
+        if (isToday) {
+            return `Today, ${selectedDate.toLocaleString('default', { month: 'short' })} ${selectedDate.getDate()}`;
+        }
+        return selectedDate.toLocaleDateString('default', { weekday: 'long', month: 'short', day: 'numeric' });
     };
 
     return (
         <SafeAreaView style={styles.container}>
             {/* 1. Top Day Selector */}
             <View style={styles.topBar}>
-                <TouchableOpacity style={styles.arrowButton}>
+                <TouchableOpacity style={styles.arrowButton} onPress={goToPreviousDay}>
                     <Ionicons name="chevron-back" size={24} color="#333" />
                 </TouchableOpacity>
                 <Text style={styles.dateText}>{getFormattedDate()}</Text>
-                <TouchableOpacity style={styles.arrowButton}>
+                <TouchableOpacity style={styles.arrowButton} onPress={goToNextDay}>
                     <Ionicons name="chevron-forward" size={24} color="#333" />
                 </TouchableOpacity>
             </View>
@@ -101,7 +143,7 @@ const FoodScreen = ({ navigation }: { navigation: any }) => {
 
                     {/* Main Progress Bar */}
                     <View style={styles.mainProgressTrack}>
-                        <View style={[styles.mainProgressFill, { width: '62%' }]} />
+                        <View style={[styles.mainProgressFill, { width: `${Math.min((consumedCalories / dailyCalorieTarget) * 100, 100)}%` }]} />
                     </View>
 
                     {/* Macro Bars */}
@@ -123,14 +165,16 @@ const FoodScreen = ({ navigation }: { navigation: any }) => {
                 <View style={{ height: 100 }} />
             </ScrollView>
 
-            {/* 4. Floating Action Button */}
-            <TouchableOpacity
-                style={styles.fab}
-                onPress={() => navigation.navigate('Camera')}
-            >
-                <Ionicons name="camera" size={24} color="#FFF" style={{ marginRight: 8 }} />
-                <Text style={styles.fabText}>Snap Meal</Text>
-            </TouchableOpacity>
+            {/* 4. Floating Action Button - Show only on Today */}
+            {isToday && (
+                <TouchableOpacity
+                    style={styles.fab}
+                    onPress={() => navigation.navigate('Camera')}
+                >
+                    <Ionicons name="camera" size={24} color="#FFF" style={{ marginRight: 8 }} />
+                    <Text style={styles.fabText}>Snap Meal</Text>
+                </TouchableOpacity>
+            )}
         </SafeAreaView>
     );
 };

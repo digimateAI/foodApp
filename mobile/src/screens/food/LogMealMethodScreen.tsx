@@ -44,7 +44,7 @@ const LogMealMethodScreen = ({ navigation, route }: { navigation: any, route: an
                             style={styles.previewImage}
                         />
                         <View style={styles.aiTag}>
-                            <MaterialCommunityIcons name="sparkles" size={12} color="#333" style={{ marginRight: 4 }} />
+                            <MaterialCommunityIcons name={"sparkles" as any} size={12} color="#333" style={{ marginRight: 4 }} />
                             <Text style={styles.aiTagText}>AI Powered</Text>
                         </View>
                     </View>

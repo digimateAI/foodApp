@@ -2,11 +2,34 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, Image, Switch, Alert } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useUserStore } from '../../store/useUserStore';
+import * as ImagePicker from 'expo-image-picker';
 
 const ProfileScreen = ({ navigation }: { navigation: any }) => {
-    const { logout, profile } = useUserStore();
+    const { logout, profile, updateProfile, user } = useUserStore();
     const [mealReminders, setMealReminders] = useState(false);
-    const [dailySummaries, setDailySummaries] = useState(true);
+
+    const handleEditPhoto = async () => {
+        // Request Permissions
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (permissionResult.granted === false) {
+            Alert.alert("Permission Refused", "You need to allow access to your photos to change your profile picture.");
+            return;
+        }
+
+        // Launch Picker
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.5,
+        });
+
+        if (!result.canceled) {
+            // Update Store
+            updateProfile({ photoUrl: result.assets[0].uri });
+        }
+    };
 
     const handleLogout = () => {
         Alert.alert(
@@ -19,8 +42,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                     style: "destructive",
                     onPress: () => {
                         logout();
-                        // Navigation reset is handled by AppNavigator typically watching auth state, 
-                        // or we can manually navigate if needed, but 'logout' updates store which updates nav.
                     }
                 }
             ]
@@ -55,16 +76,22 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 {/* 2. User Profile Summary */}
                 <View style={styles.userSummary}>
-                    <View style={styles.avatarContainer}>
+                    <TouchableOpacity style={styles.avatarContainer} onPress={handleEditPhoto}>
                         <Image
-                            source={{ uri: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80' }}
+                            source={{ uri: profile.photoUrl || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80' }}
                             style={styles.avatar}
                         />
-                    </View>
+                        <View style={styles.editIconBadge}>
+                            <Ionicons name="camera" size={14} color="#FFF" />
+                        </View>
+                    </TouchableOpacity>
                     <Text style={styles.userName}>{profile.name}</Text>
-                    <Text style={styles.userEmail}>{profile.name ? `${profile.name.toLowerCase().replace(/\s/g, '.')}@foodvision.app` : ''}</Text>
+                    <Text style={styles.userEmail}>{user?.email || ''}</Text>
 
-                    <TouchableOpacity style={styles.editButton}>
+                    <TouchableOpacity
+                        style={styles.editButton}
+                        onPress={() => navigation.navigate('PersonalDetails', { mode: 'edit' })}
+                    >
                         <Text style={styles.editButtonText}>Edit Profile</Text>
                     </TouchableOpacity>
                 </View>
@@ -81,8 +108,9 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                 {/* Goals Group */}
                 <Text style={styles.sectionHeader}>GOALS & TARGETS</Text>
                 <View style={styles.cardGroup}>
-                    <InfoRow label="Current Goal" value={profile.goal.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} valueColor="#33CC33" />
-                    <InfoRow label="Daily Calorie Target" value={`${profile.dailyCalorieTarget} kcal`} showDivider={false} />
+                    <TouchableOpacity onPress={() => navigation.navigate('ActivityGoal', { mode: 'edit' })}>
+                        <InfoRow label="Current Goal" value={profile.goal.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} valueColor="#33CC33" showDivider={false} />
+                    </TouchableOpacity>
                 </View>
 
                 {/* 4. Connected Devices Section */}
@@ -131,26 +159,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
                             trackColor={{ false: '#E0E0E0', true: '#33CC33' }}
                             thumbColor={'#FFFFFF'}
                         />
-                    </View>
-                    <View style={styles.divider} />
-
-                    {/* Daily Summaries */}
-                    <View style={styles.notificationRow}>
-                        <View style={styles.rowLeft}>
-                            <Text style={styles.notificationLabel}>Daily Summaries</Text>
-                            <Text style={styles.notificationDesc}>Receive a summary of your macros</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Switch
-                                value={dailySummaries}
-                                onValueChange={setDailySummaries}
-                                trackColor={{ false: '#E0E0E0', true: '#33CC33' }}
-                                thumbColor={'#FFFFFF'}
-                            />
-                            {dailySummaries && (
-                                <Ionicons name="checkmark" size={14} color="#33CC33" style={{ position: 'absolute', right: 4, zIndex: 10 }} />
-                            )}
-                        </View>
                     </View>
                 </View>
 
@@ -208,6 +216,19 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 40,
+    },
+    editIconBadge: {
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        backgroundColor: '#33CC33',
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#FFF',
     },
     userName: {
         fontSize: 22,

@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
 
-const BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://localhost:3000';
+// 10.0.2.2 for Android Emulator, localhost for iOS Simulator
+// BUT for physical devices, you need your computer's LAN IP
+// Current LAN IP: 192.168.29.233
+const BASE_URL = 'http://192.168.29.233:3000'; // Hardcoded for physical device testing
 
 const api = axios.create({
     baseURL: BASE_URL,

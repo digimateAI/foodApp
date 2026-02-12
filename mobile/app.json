@@ -1,31 +1,44 @@
 {
-    "expo": {
-        "name": "foodvision-mobile",
-        "slug": "foodvision-mobile",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/icon.png",
-        "userInterfaceStyle": "light",
-        "splash": {
-            "image": "./assets/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#ffffff"
-        },
-        "assetBundlePatterns": [
-            "**/*"
-        ],
-        "ios": {
-            "supportsTablet": true
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
-            },
-            "usesCleartextTraffic": true
-        },
-        "web": {
-            "favicon": "./assets/favicon.png"
-        }
-    }
+  "expo": {
+    "name": "foodvision-mobile",
+    "slug": "foodvision-mobile",
+    "version": "1.0.0",
+    "scheme": "foodvision",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aish0512.foodvisionmobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.aish0512.foodvisionmobile"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "96b1710b-ec19-4636-8d42-0882d588ac94"
+      }
+    },
+    "plugins": [
+      "expo-font"
+    ]
+  }
 }

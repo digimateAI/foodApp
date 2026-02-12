@@ -3,10 +3,12 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dim
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useUserStore } from '../../store/useUserStore';
 
-const ActivityGoalScreen = ({ navigation }: { navigation: any }) => {
-    const { updateProfile, calculateTargets } = useUserStore();
-    const [activityLevel, setActivityLevel] = useState<string | null>(null);
-    const [goal, setGoal] = useState<string | null>(null);
+const ActivityGoalScreen = ({ navigation, route }: { navigation: any, route: any }) => {
+    const { updateProfile, calculateTargets, profile } = useUserStore();
+    const isEditMode = route.params?.mode === 'edit';
+
+    const [activityLevel, setActivityLevel] = useState<string | null>(isEditMode ? profile.activityLevel : null);
+    const [goal, setGoal] = useState<string | null>(isEditMode ? profile.goal : null);
 
     const isFormValid = activityLevel !== null && goal !== null;
 
@@ -77,21 +79,19 @@ const ActivityGoalScreen = ({ navigation }: { navigation: any }) => {
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                     <Ionicons name="chevron-back" size={24} color="#333" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Personalize Your Plan</Text>
+                <Text style={styles.headerTitle}>{isEditMode ? 'Update Plan' : 'Personalize Your Plan'}</Text>
                 <View style={{ width: 24 }} />
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
-                {/* Progress Indicator */}
-                <View style={styles.progressSection}>
-                    <View style={styles.progressLabels}>
-                        <Text style={styles.stepText}>Step 2 of 2</Text>
-                        {/* <Text style={styles.percentText}>100% Completed</Text> */}
+                {/* Progress Indicator - Hide in Edit Mode */}
+                {!isEditMode && (
+                    <View style={styles.progressSection}>
+                        <View style={styles.progressLabels}>
+                            <Text style={styles.stepText}>Step 2 of 2</Text>
+                        </View>
                     </View>
-                    {/* <View style={styles.progressBarBg}>
-                        <View style={[styles.progressBarFill, { width: '100%' }]} />
-                    </View> */}
-                </View>
+                )}
 
                 {/* Activity Level Section */}
                 <View style={styles.section}>
@@ -125,12 +125,17 @@ const ActivityGoalScreen = ({ navigation }: { navigation: any }) => {
                         if (activityLevel && goal) {
                             updateProfile({ activityLevel, goal });
                             calculateTargets();
-                            navigation.navigate('CaloriePlan');
+
+                            if (isEditMode) {
+                                navigation.goBack();
+                            } else {
+                                navigation.navigate('CaloriePlan');
+                            }
                         }
                     }}
                 >
-                    <Text style={styles.nextButtonText}>Next Step</Text>
-                    <Ionicons name="arrow-forward" size={20} color="#fff" style={{ marginLeft: 8 }} />
+                    <Text style={styles.nextButtonText}>{isEditMode ? 'Save Changes' : 'Next Step'}</Text>
+                    {!isEditMode && <Ionicons name="arrow-forward" size={20} color="#fff" style={{ marginLeft: 8 }} />}
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

@@ -4,7 +4,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const LogMealScreen = ({ navigation }: { navigation: any }) => {
 
-    const renderMealCard = (id: string, label: string, time: string, icon: any) => (
+    const renderMealCard = (id: string, label: string, icon: any) => (
         <TouchableOpacity
             style={styles.mealCard}
             onPress={() => navigation.navigate('Camera', { mealType: id })} // Pass meal type to camera
@@ -13,7 +13,6 @@ const LogMealScreen = ({ navigation }: { navigation: any }) => {
                 <MaterialCommunityIcons name={icon} size={32} color="#33CC33" />
             </View>
             <Text style={styles.mealLabel}>{label}</Text>
-            <Text style={styles.mealTime}>{time}</Text>
         </TouchableOpacity>
     );
 
@@ -28,15 +27,7 @@ const LogMealScreen = ({ navigation }: { navigation: any }) => {
                 <View style={{ width: 24 }} />
             </View>
 
-            {/* 2. Progress Indicator Section */}
-            <View style={styles.progressContainer}>
-                <View style={styles.dotsRow}>
-                    <View style={[styles.dot, styles.dotFilled]} />
-                    <View style={styles.dot} />
-                    <View style={styles.dot} />
-                </View>
-                <Text style={styles.stepText}>Step 1 of 3</Text>
-            </View>
+
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 {/* 3. Main Question */}
@@ -44,15 +35,18 @@ const LogMealScreen = ({ navigation }: { navigation: any }) => {
 
                 {/* 4. Meal Type Choice Cards */}
                 <View style={styles.cardsGrid}>
-                    {renderMealCard('breakfast', 'Breakfast', '7:00 - 10:00 AM', 'croissant')}
-                    {renderMealCard('lunch', 'Lunch', '12:00 - 2:00 PM', 'hamburger')}
-                    {renderMealCard('dinner', 'Dinner', '6:00 - 9:00 PM', 'silverware-fork-knife')}
-                    {renderMealCard('snacks', 'Snacks', 'Anytime', 'cookie')}
+                    {renderMealCard('breakfast', 'Breakfast', 'croissant')}
+                    {renderMealCard('lunch', 'Lunch', 'hamburger')}
+                    {renderMealCard('dinner', 'Dinner', 'silverware-fork-knife')}
+                    {renderMealCard('snacks', 'Snacks', 'cookie')}
                 </View>
             </ScrollView>
 
             {/* 5. Quick Scan Barcode Button */}
-            <TouchableOpacity style={styles.scanButton}>
+            <TouchableOpacity
+                style={styles.scanButton}
+                onPress={() => navigation.navigate('Camera', { mode: 'barcode' })}
+            >
                 <MaterialCommunityIcons name="barcode-scan" size={24} color="#33CC33" style={{ marginRight: 10 }} />
                 <Text style={styles.scanButtonText}>Quick Scan Barcode</Text>
             </TouchableOpacity>
@@ -80,29 +74,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#1A1A1A',
     },
-    progressContainer: {
-        alignItems: 'center',
-        marginTop: 8,
-        marginBottom: 32,
-    },
-    dotsRow: {
-        flexDirection: 'row',
-        marginBottom: 8,
-        gap: 8,
-    },
-    dot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-        backgroundColor: '#E0E0E0',
-    },
-    dotFilled: {
-        backgroundColor: '#33CC33',
-    },
-    stepText: {
-        fontSize: 12,
-        color: '#808080',
-    },
+
     scrollContent: {
         paddingHorizontal: 16,
         paddingBottom: 100, // Space for bottom button

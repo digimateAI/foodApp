@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 export interface Meal {
     id: string;
@@ -31,6 +33,7 @@ interface UserProfile {
     bmi: number;
     bmiStatus: 'Underweight' | 'Normal' | 'Overweight' | 'Obese' | '';
     waterTarget: number; // in ml
+    photoUrl?: string; // Local URI or Remote URL
 }
 
 interface DailyLog {
@@ -46,11 +49,11 @@ interface DailyLog {
 
 interface UserState {
     // Auth
-    user: { name: string; email: string } | null;
+    user: { uid: string; name: string; email: string; photoUrl?: string } | null;
     token: string | null;
     isAuthenticated: boolean;
     hasCompletedOnboarding: boolean;
-    setUser: (user: { name: string; email: string }) => void;
+    setUser: (user: { uid: string; name: string; email: string; photoUrl?: string }) => void;
     setToken: (token: string) => void;
     login: () => void;
     logout: () => void;
@@ -61,13 +64,18 @@ interface UserState {
     updateProfile: (updates: Partial<UserProfile>) => void;
     calculateTargets: () => void;
 
+    // History: "YYYY-MM-DD" -> DailyLog
+    history: Record<string, DailyLog>;
+
     // Daily Log
     dailyLog: DailyLog;
     lastActiveDate: string | null;
     logMeal: (meal: Meal) => void;
+    deleteMeal: (id: string) => void;
     addWater: (amount: number) => void;
     resetDailyLog: () => void;
     checkDailyReset: () => void;
+    fetchDailyLog: () => Promise<void>;
 }
 
 import { NotificationService } from '../services/NotificationService';
@@ -113,6 +121,7 @@ export const useUserStore = create<UserState>()(
                 bmi: 0,
                 bmiStatus: '',
                 waterTarget: 3000, // Default for female
+                photoUrl: undefined,
             },
             updateProfile: (updates) => set((state) => ({
                 profile: { ...state.profile, ...updates }
@@ -183,7 +192,7 @@ export const useUserStore = create<UserState>()(
                 const c = Math.round((target * 0.40) / 4);
                 const f = Math.round((target * 0.30) / 9);
 
-                // 6. Water Calculation (Simplified User Request)
+                // 6. Water Calculation (Simplified User Requests)
                 // Female: 3000ml, Male: 4000ml
                 const waterTarget = gender === 'female' ? 3000 : 4000;
 
@@ -202,6 +211,9 @@ export const useUserStore = create<UserState>()(
                     }
                 }));
             },
+
+            // History Data
+            history: {},
 
             // Daily Log State
             dailyLog: {
@@ -229,35 +241,127 @@ export const useUserStore = create<UserState>()(
                 // Update Dinner Insight Notification with new calorie data
                 NotificationService.scheduleDinnerInsight(consumedCalories, state.profile.dailyCalorieTarget);
 
+                const updatedLog = {
+                    ...state.dailyLog,
+                    meals: newMeals,
+                    consumedCalories,
+                    consumedProtein,
+                    consumedCarbs,
+                    consumedFat,
+                };
+
+                // Save to history
+                const today = new Date().toISOString().split('T')[0];
+
                 return {
-                    dailyLog: {
-                        ...state.dailyLog,
-                        meals: newMeals,
-                        consumedCalories,
-                        consumedProtein,
-                        consumedCarbs,
-                        consumedFat,
-                    }
+                    dailyLog: updatedLog,
+                    history: { ...state.history, [today]: updatedLog }
+                };
+                return {
+                    dailyLog: updatedLog,
+                    history: { ...state.history, [today]: updatedLog }
                 };
             }),
 
+            deleteMeal: (id) => set((state) => {
+                const newMeals = state.dailyLog.meals.filter(m => m.id !== id);
+                // TODO: Sync delete with Firestore
+                return {
+                    dailyLog: { ...state.dailyLog, meals: newMeals }
+                };
+            }),
+
+            fetchDailyLog: async () => {
+                const { user } = get();
+                if (!user?.email) return;
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+
+                try {
+                    // Query by Email (since we updated CameraScreen to store userEmail)
+                    // OR userId. CameraScreen uses user.email as userId if available.
+                    // The Firestore doc says: userId: userIdentifier.
+                    // userIdentifier = user.email || user.uid...
+                    const userIdentifier = user.email || user.uid;
+
+                    const q = query(
+                        collection(db, 'users', userIdentifier, 'meals'),
+                        where('date', '>=', today.toISOString()),
+                        where('date', '<', tomorrow.toISOString())
+                    );
+
+                    const querySnapshot = await getDocs(q);
+                    const fetchedMeals: Meal[] = [];
+                    let fetchedCalories = 0;
+                    let fetchedProtein = 0;
+                    let fetchedCarbs = 0;
+                    let fetchedFat = 0;
+
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const meal: Meal = {
+                            id: doc.id,
+                            type: data.type,
+                            name: data.items.map((i: any) => i.name).join(', '),
+                            calories: data.items.reduce((acc: number, i: any) => acc + (i.calories || 0), 0),
+                            protein: data.items.reduce((acc: number, i: any) => acc + (i.protein || 0), 0),
+                            carbs: data.items.reduce((acc: number, i: any) => acc + (i.carbs || 0), 0),
+                            fat: data.items.reduce((acc: number, i: any) => acc + (i.fat || 0), 0),
+                            imageUri: data.photoUrl,
+                            timestamp: new Date(data.date).getTime()
+                        };
+                        fetchedMeals.push(meal);
+                        fetchedCalories += meal.calories;
+                        fetchedProtein += meal.protein;
+                        fetchedCarbs += meal.carbs;
+                        fetchedFat += meal.fat;
+                    });
+
+                    set((state) => ({
+                        dailyLog: {
+                            ...state.dailyLog,
+                            meals: fetchedMeals,
+                            consumedCalories: fetchedCalories,
+                            consumedProtein: fetchedProtein,
+                            consumedCarbs: fetchedCarbs,
+                            consumedFat: fetchedFat,
+                        }
+                    }));
+
+                } catch (error) {
+                    console.error("Failed to fetch daily log:", error);
+                }
+            },
+
             addWater: (amount) => set((state) => {
-                const newIntake = state.dailyLog.waterIntake + amount;
+                const newIntake = Math.max(0, state.dailyLog.waterIntake + amount);
                 const remaining = state.profile.waterTarget - newIntake;
 
                 // Reschedule notification with updated remaining amount
                 NotificationService.scheduleWaterReminder(remaining);
 
+                const updatedLog = {
+                    ...state.dailyLog,
+                    waterIntake: newIntake
+                };
+
+                // Save to history
+                const today = new Date().toISOString().split('T')[0];
+
                 return {
-                    dailyLog: {
-                        ...state.dailyLog,
-                        waterIntake: newIntake
-                    }
+                    dailyLog: updatedLog,
+                    history: { ...state.history, [today]: updatedLog }
                 };
             }),
 
-            resetDailyLog: () => set({
-                dailyLog: {
+            resetDailyLog: () => set((state) => {
+                // Before resetting, ensure current day logs are in history (should be already, but safe check)
+                // Actually reset usually happens at start of new day. Old day is safe.
+
+                const newLog = {
                     meals: [],
                     consumedCalories: 0,
                     consumedProtein: 0,
@@ -266,12 +370,19 @@ export const useUserStore = create<UserState>()(
                     waterIntake: 0,
                     steps: 0,
                     sleepDuration: '0h',
-                },
-                lastActiveDate: new Date().toDateString(),
+                };
+
+                // We don't overwrite history of TODAY with empty. We just reset the "active tracker".
+                // When we start logging for new day, it writes to new date key.
+
+                return {
+                    dailyLog: newLog,
+                    lastActiveDate: new Date().toISOString().split('T')[0], // Standardize date format
+                };
             }),
 
             checkDailyReset: () => {
-                const today = new Date().toDateString();
+                const today = new Date().toISOString().split('T')[0];
                 const { lastActiveDate, resetDailyLog } = get();
 
                 if (lastActiveDate !== today) {
@@ -282,6 +393,14 @@ export const useUserStore = create<UserState>()(
         {
             name: 'foodvision-storage',
             storage: createJSONStorage(() => AsyncStorage),
+            partialize: (state) => ({
+                user: state.user,
+                token: state.token,
+                isAuthenticated: state.isAuthenticated,
+                profile: state.profile,
+                hasCompletedOnboarding: state.hasCompletedOnboarding,
+                // dailyLog and history are excluded so they are fetched fresh
+            }),
         }
     )
 );
