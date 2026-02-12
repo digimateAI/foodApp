@@ -184,7 +184,8 @@ export default function CameraScreen({ route, navigation }: any) {
                     {
                         text: "No, Finish",
                         onPress: () => {
-                            navigation.navigate('Food');
+                            // Navigate to Home as requested
+                            navigation.navigate('Main', { screen: 'Home' });
                         }
                     }
                 ]
@@ -237,7 +238,7 @@ export default function CameraScreen({ route, navigation }: any) {
                 // Path: users/aish@gmail.com/meals/AUTO_ID
                 const docRef = await addDoc(collection(db, 'users', userIdentifier, 'meals'), mealDoc);
                 console.log('Meal verified/saved with ID:', docRef.id);
-                Alert.alert("Cloud Sync Complete", "Meal saved to Database!\nID: " + docRef.id);
+                // Alert.alert("Cloud Sync Complete", "Meal saved to Database!\nID: " + docRef.id);
 
             } catch (uploadErr: any) {
                 console.error('Failed to upload/sync meal:', uploadErr);
