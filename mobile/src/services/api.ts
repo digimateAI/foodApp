@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 // 10.0.2.2 for Android Emulator, localhost for iOS Simulator
 // BUT for physical devices, you need your computer's LAN IP
 // Current LAN IP: 192.168.29.233
-const BASE_URL = 'http://192.168.29.233:3000'; // Hardcoded for physical device testing
+const BASE_URL = 'https://foodvision-backend-70591556658.us-central1.run.app';
 
 const api = axios.create({
     baseURL: BASE_URL,

@@ -76,6 +76,7 @@ interface UserState {
     resetDailyLog: () => void;
     checkDailyReset: () => void;
     fetchDailyLog: () => Promise<void>;
+    fetchDayLog: (date: Date) => Promise<void>;
 }
 
 import { NotificationService } from '../services/NotificationService';
@@ -251,7 +252,8 @@ export const useUserStore = create<UserState>()(
                 };
 
                 // Save to history
-                const today = new Date().toISOString().split('T')[0];
+                const d = new Date();
+                const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
                 return {
                     dailyLog: updatedLog,
@@ -302,9 +304,12 @@ export const useUserStore = create<UserState>()(
 
                     querySnapshot.forEach((doc) => {
                         const data = doc.data();
+                        let type = data.type;
+                        if (type === 'snack') type = 'snacks';
+
                         const meal: Meal = {
                             id: doc.id,
-                            type: data.type,
+                            type: type,
                             name: data.items.map((i: any) => i.name).join(', '),
                             calories: data.items.reduce((acc: number, i: any) => acc + (i.calories || 0), 0),
                             protein: data.items.reduce((acc: number, i: any) => acc + (i.protein || 0), 0),
@@ -336,6 +341,114 @@ export const useUserStore = create<UserState>()(
                 }
             },
 
+            fetchDayLog: async (date: Date) => {
+                console.log("fetchDayLog: Fetching log for date:", date.toISOString());
+                const { user } = get();
+                if (!user?.email) {
+                    console.log("fetchDayLog: No user email, returning.");
+                    return;
+                }
+
+                const startDate = new Date(date);
+                startDate.setHours(0, 0, 0, 0);
+                const endDate = new Date(startDate);
+                endDate.setDate(endDate.getDate() + 1);
+
+                const dateKey = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}-${String(startDate.getDate()).padStart(2, '0')}`;
+
+                // Get today's key consistently
+                const now = new Date();
+                const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+                try {
+                    const userIdentifier = user.email || user.uid;
+                    console.log(`fetchDayLog: Querying meals for user ${userIdentifier} from ${startDate.toISOString()} to ${endDate.toISOString()}`);
+
+                    const q = query(
+                        collection(db, 'users', userIdentifier, 'meals'),
+                        where('date', '>=', startDate.toISOString()),
+                        where('date', '<', endDate.toISOString())
+                    );
+
+                    const querySnapshot = await getDocs(q);
+                    const fetchedMeals: Meal[] = [];
+                    let fetchedCalories = 0;
+                    let fetchedProtein = 0;
+                    let fetchedCarbs = 0;
+                    let fetchedFat = 0;
+
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        let type = data.type;
+                        if (type === 'snack') type = 'snacks';
+
+                        const meal: Meal = {
+                            id: doc.id,
+                            type: type,
+                            name: data.items.map((i: any) => i.name).join(', '),
+                            calories: data.items.reduce((acc: number, i: any) => acc + (i.calories || 0), 0),
+                            protein: data.items.reduce((acc: number, i: any) => acc + (i.protein || 0), 0),
+                            carbs: data.items.reduce((acc: number, i: any) => acc + (i.carbs || 0), 0),
+                            fat: data.items.reduce((acc: number, i: any) => acc + (i.fat || 0), 0),
+                            imageUri: data.photoUrl,
+                            timestamp: new Date(data.date).getTime()
+                        };
+                        fetchedMeals.push(meal);
+                        fetchedCalories += meal.calories;
+                        fetchedProtein += meal.protein;
+                        fetchedCarbs += meal.carbs;
+                        fetchedFat += meal.fat;
+                    });
+
+                    console.log(`fetchDayLog: Fetched ${fetchedMeals.length} meals for ${dateKey}.`);
+                    console.log(`fetchDayLog: Total Calories: ${fetchedCalories}, Protein: ${fetchedProtein}, Carbs: ${fetchedCarbs}, Fat: ${fetchedFat}`);
+
+                    // Construct the log object
+                    // Note: We might be missing water/steps/sleep for past days if not stored in 'meals'.
+                    // Assuming for now we just want meals/macros.
+                    // If we had a separate 'days' collection, we'd fetch that too.
+                    // For now, let's use what we have or defaults.
+                    // If history already has this day, preserve other fields (water, etc) if they exist.
+                    const existingLog = get().history[dateKey] || {
+                        meals: [],
+                        consumedCalories: 0,
+                        consumedProtein: 0,
+                        consumedCarbs: 0,
+                        consumedFat: 0,
+                        waterIntake: 0,
+                        steps: 0,
+                        sleepDuration: '0h',
+                    };
+
+                    const updatedLog: DailyLog = {
+                        ...existingLog,
+                        meals: fetchedMeals,
+                        consumedCalories: fetchedCalories,
+                        consumedProtein: fetchedProtein,
+                        consumedCarbs: fetchedCarbs,
+                        consumedFat: fetchedFat,
+                    };
+
+                    set((state) => {
+                        const newHistory = { ...state.history, [dateKey]: updatedLog };
+
+                        // If fetching for today, also update dailyLog
+                        if (dateKey === todayKey) {
+                            console.log("fetchDayLog: Updating dailyLog for today.");
+                            return {
+                                history: newHistory,
+                                dailyLog: { ...state.dailyLog, ...updatedLog }
+                            };
+                        }
+                        console.log("fetchDayLog: Updating history for past day.");
+                        return { history: newHistory };
+                    });
+
+                } catch (error) {
+                    console.error("Failed to fetch day log:", error);
+                }
+            },
+
             addWater: (amount) => set((state) => {
                 const newIntake = Math.max(0, state.dailyLog.waterIntake + amount);
                 const remaining = state.profile.waterTarget - newIntake;
@@ -349,7 +462,8 @@ export const useUserStore = create<UserState>()(
                 };
 
                 // Save to history
-                const today = new Date().toISOString().split('T')[0];
+                const d = new Date();
+                const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
                 return {
                     dailyLog: updatedLog,
@@ -374,15 +488,18 @@ export const useUserStore = create<UserState>()(
 
                 // We don't overwrite history of TODAY with empty. We just reset the "active tracker".
                 // When we start logging for new day, it writes to new date key.
+                const d = new Date();
+                const todayKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
                 return {
                     dailyLog: newLog,
-                    lastActiveDate: new Date().toISOString().split('T')[0], // Standardize date format
+                    lastActiveDate: todayKey, // Standardize date format
                 };
             }),
 
             checkDailyReset: () => {
-                const today = new Date().toISOString().split('T')[0];
+                const now = new Date();
+                const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
                 const { lastActiveDate, resetDailyLog } = get();
 
                 if (lastActiveDate !== today) {

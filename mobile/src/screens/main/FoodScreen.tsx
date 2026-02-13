@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useUserStore, Meal } from '../../store/useUserStore';
@@ -7,14 +7,20 @@ const { width } = Dimensions.get('window');
 
 const FoodScreen = ({ navigation }: { navigation: any }) => {
     // 1. Get History from Store
-    const { dailyLog, profile, history } = useUserStore();
+    const { dailyLog, profile, history, fetchDayLog } = useUserStore();
     const { dailyCalorieTarget, proteinTarget, carbTarget, fatTarget } = profile;
 
     // 2. Local State for Date Navigation
     const [selectedDate, setSelectedDate] = React.useState(new Date());
 
+    useEffect(() => {
+        fetchDayLog(selectedDate);
+    }, [selectedDate, fetchDayLog]);
+
     // 3. Helper to get date string key (YYYY-MM-DD)
-    const getDateKey = (date: Date) => date.toISOString().split('T')[0];
+    const getDateKey = (date: Date) => {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    };
 
     // 4. Determine Data to Display
     // If selected date is today, show live 'dailyLog'. Else show historical log or empty default.
@@ -78,8 +84,8 @@ const FoodScreen = ({ navigation }: { navigation: any }) => {
         </View>
     );
 
-    const renderUnloggedMeal = (prompt: string) => (
-        <TouchableOpacity style={styles.unloggedCard} onPress={() => navigation.navigate('Camera')}>
+    const renderUnloggedMeal = (prompt: string, mealType: string) => (
+        <TouchableOpacity style={styles.unloggedCard} onPress={() => navigation.navigate('Camera', { mealType })}>
             <Ionicons name="camera" size={32} color="#B0B0B0" />
             <Text style={styles.unloggedText}>{prompt}</Text>
             <View style={styles.plusIcon}>
@@ -102,7 +108,7 @@ const FoodScreen = ({ navigation }: { navigation: any }) => {
                 ))
                 :
                 // Only show "Add" button if it is TODAY. Past/Future days shouldn't prompt to add (usually).
-                isToday ? renderUnloggedMeal(`Log your ${title.toLowerCase()}`) : <Text style={{ marginHorizontal: 16, color: '#999', fontStyle: 'italic' }}>No entry</Text>
+                isToday ? renderUnloggedMeal(`Log your ${title.toLowerCase()}`, title) : <Text style={{ marginHorizontal: 16, color: '#999', fontStyle: 'italic' }}>No entry</Text>
             }
         </View>
     );
@@ -160,7 +166,7 @@ const FoodScreen = ({ navigation }: { navigation: any }) => {
                 {renderSection('Breakfast', '06:00 - 10:00 AM', meals.filter(m => m.type === 'breakfast'))}
                 {renderSection('Lunch', '12:00 - 02:00 PM', meals.filter(m => m.type === 'lunch'))}
                 {renderSection('Dinner', '06:00 - 09:00 PM', meals.filter(m => m.type === 'dinner'))}
-                {renderSection('Snacks', 'Anytime', meals.filter(m => m.type === 'snacks'))}
+                {renderSection('Snacks', 'Anytime', meals.filter(m => m.type === 'snacks' || (m.type as any) === 'snack'))}
 
                 <View style={{ height: 100 }} />
             </ScrollView>

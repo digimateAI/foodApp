@@ -152,7 +152,9 @@ export default function CameraScreen({ route, navigation }: any) {
                 else calculatedMealType = 'snacks';
             }
 
-            const mealTypeVal = (calculatedMealType ? calculatedMealType.toLowerCase() : 'snacks') as any;
+            let lowerType = calculatedMealType ? calculatedMealType.toLowerCase() : 'snacks';
+            if (lowerType === 'snack') lowerType = 'snacks';
+            const mealTypeVal = lowerType as any;
 
             // 2. LOG LOCAL (Immediate UI Update)
             logMeal({

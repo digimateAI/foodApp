@@ -157,7 +157,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                     {/* Add Snack Card */}
                     <TouchableOpacity
                         style={styles.addSnackCard}
-                        onPress={() => navigation.navigate('Camera', { mealType: 'Snack' })}
+                        onPress={() => navigation.navigate('Camera', { mealType: 'Snacks' })}
                     >
                         <View style={styles.addSnackCircle}>
                             <Ionicons name="add" size={24} color="#808080" />
